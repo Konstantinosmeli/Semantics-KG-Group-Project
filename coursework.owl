@@ -2,13 +2,19 @@
 <rdf:RDF xmlns="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/"
      xml:base="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/"
      xmlns:dc="http://purl.org/dc/elements/1.1/"
+     xmlns:dbo="http://dbpedia.org/ontology/"
+     xmlns:dbr="http://dbpedia.org/resource/"
      xmlns:owl="http://www.w3.org/2002/07/owl#"
      xmlns:rce="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/"
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
      xmlns:xml="http://www.w3.org/XML/1998/namespace"
      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
-    <owl:Ontology rdf:about="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/"/>
+    <owl:Ontology rdf:about="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/">
+        <dc:creator>Recruitable:
+Konstantinos Meli
+Quang Huy Bui</dc:creator>
+    </owl:Ontology>
     
 
 
@@ -26,9 +32,284 @@
     <!-- http://purl.org/dc/elements/1.1/creator -->
 
     <owl:AnnotationProperty rdf:about="http://purl.org/dc/elements/1.1/creator"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://dbpedia.org/ontology/Ingredients -->
+
+    <owl:Class rdf:about="http://dbpedia.org/ontology/Ingredients"/>
+    
+
+
+    <!-- http://dbpedia.org/ontology/Restaurant -->
+
+    <owl:Class rdf:about="http://dbpedia.org/ontology/Restaurant"/>
+    
+
+
+    <!-- http://dbpedia.org/ontology/address -->
+
+    <owl:Class rdf:about="http://dbpedia.org/ontology/address"/>
+    
+
+
+    <!-- http://dbpedia.org/ontology/city -->
+
+    <owl:Class rdf:about="http://dbpedia.org/ontology/city">
+        <rdfs:subClassOf rdf:resource="http://dbpedia.org/ontology/address"/>
+    </owl:Class>
+    
+
+
+    <!-- http://dbpedia.org/ontology/country -->
+
+    <owl:Class rdf:about="http://dbpedia.org/ontology/country">
+        <rdfs:subClassOf rdf:resource="http://dbpedia.org/ontology/address"/>
+    </owl:Class>
+    
+
+
+    <!-- http://dbpedia.org/ontology/postalCode -->
+
+    <owl:Class rdf:about="http://dbpedia.org/ontology/postalCode">
+        <rdfs:subClassOf rdf:resource="http://dbpedia.org/ontology/address"/>
+    </owl:Class>
+    
+
+
+    <!-- http://dbpedia.org/ontology/state -->
+
+    <owl:Class rdf:about="http://dbpedia.org/ontology/state">
+        <rdfs:subClassOf rdf:resource="http://dbpedia.org/ontology/address"/>
+    </owl:Class>
+    
+
+
+    <!-- http://dbpedia.org/resource/Bacon -->
+
+    <owl:Class rdf:about="http://dbpedia.org/resource/Bacon">
+        <rdfs:subClassOf rdf:resource="http://dbpedia.org/resource/Meat"/>
+    </owl:Class>
+    
+
+
+    <!-- http://dbpedia.org/resource/Currency -->
+
+    <owl:Class rdf:about="http://dbpedia.org/resource/Currency">
+        <rdfs:subClassOf rdf:resource="http://dbpedia.org/resource/Price"/>
+    </owl:Class>
+    
+
+
+    <!-- http://dbpedia.org/resource/Fruit -->
+
+    <owl:Class rdf:about="http://dbpedia.org/resource/Fruit">
+        <rdfs:subClassOf rdf:resource="http://dbpedia.org/ontology/Ingredients"/>
+    </owl:Class>
+    
+
+
+    <!-- http://dbpedia.org/resource/Meat -->
+
+    <owl:Class rdf:about="http://dbpedia.org/resource/Meat">
+        <rdfs:subClassOf rdf:resource="http://dbpedia.org/ontology/Ingredients"/>
+    </owl:Class>
+    
+
+
+    <!-- http://dbpedia.org/resource/Menu -->
+
+    <owl:Class rdf:about="http://dbpedia.org/resource/Menu"/>
+    
+
+
+    <!-- http://dbpedia.org/resource/Mushroom -->
+
+    <owl:Class rdf:about="http://dbpedia.org/resource/Mushroom">
+        <rdfs:subClassOf rdf:resource="http://dbpedia.org/resource/Vegetable"/>
+    </owl:Class>
+    
+
+
+    <!-- http://dbpedia.org/resource/Pepperoni -->
+
+    <owl:Class rdf:about="http://dbpedia.org/resource/Pepperoni">
+        <rdfs:subClassOf rdf:resource="http://dbpedia.org/resource/Meat"/>
+    </owl:Class>
+    
+
+
+    <!-- http://dbpedia.org/resource/Pineapple -->
+
+    <owl:Class rdf:about="http://dbpedia.org/resource/Pineapple">
+        <rdfs:subClassOf rdf:resource="http://dbpedia.org/resource/Fruit"/>
+    </owl:Class>
+    
+
+
+    <!-- http://dbpedia.org/resource/Pizza -->
+
+    <owl:Class rdf:about="http://dbpedia.org/resource/Pizza"/>
+    
+
+
+    <!-- http://dbpedia.org/resource/Pizza_Margherita -->
+
+    <owl:Class rdf:about="http://dbpedia.org/resource/Pizza_Margherita">
+        <rdfs:subClassOf rdf:resource="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/NamedPizza"/>
+    </owl:Class>
+    
+
+
+    <!-- http://dbpedia.org/resource/Price -->
+
+    <owl:Class rdf:about="http://dbpedia.org/resource/Price"/>
+    
+
+
+    <!-- http://dbpedia.org/resource/Tomato -->
+
+    <owl:Class rdf:about="http://dbpedia.org/resource/Tomato">
+        <rdfs:subClassOf rdf:resource="http://dbpedia.org/resource/Vegetable"/>
+    </owl:Class>
+    
+
+
+    <!-- http://dbpedia.org/resource/Vegetable -->
+
+    <owl:Class rdf:about="http://dbpedia.org/resource/Vegetable">
+        <rdfs:subClassOf rdf:resource="http://dbpedia.org/ontology/Ingredients"/>
+    </owl:Class>
+    
+
+
+    <!-- http://dbpedia.org/resource/Dish_(food) -->
+
+    <owl:Class rdf:about="http://dbpedia.org/resource/Dish_(food)"/>
+    
+
+
+    <!-- http:/www.city.ac.uk/inm713-in3067/2023/recruitable/AddressLine -->
+
+    <owl:Class rdf:about="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/AddressLine">
+        <rdfs:subClassOf rdf:resource="http://dbpedia.org/ontology/address"/>
+    </owl:Class>
+    
+
+
+    <!-- http:/www.city.ac.uk/inm713-in3067/2023/recruitable/AmericanRestaurant -->
+
+    <owl:Class rdf:about="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/AmericanRestaurant">
+        <rdfs:subClassOf rdf:resource="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/RestaurantType"/>
+    </owl:Class>
+    
+
+
+    <!-- http:/www.city.ac.uk/inm713-in3067/2023/recruitable/Bakery -->
+
+    <owl:Class rdf:about="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/Bakery">
+        <rdfs:subClassOf rdf:resource="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/RestaurantType"/>
+    </owl:Class>
+    
+
+
+    <!-- http:/www.city.ac.uk/inm713-in3067/2023/recruitable/Bar -->
+
+    <owl:Class rdf:about="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/Bar">
+        <rdfs:subClassOf rdf:resource="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/RestaurantType"/>
+    </owl:Class>
+    
+
+
+    <!-- http:/www.city.ac.uk/inm713-in3067/2023/recruitable/CheesePizza -->
+
+    <owl:Class rdf:about="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/CheesePizza">
+        <rdfs:subClassOf rdf:resource="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/NamedPizza"/>
+    </owl:Class>
+    
+
+
+    <!-- http:/www.city.ac.uk/inm713-in3067/2023/recruitable/CoffeeShop -->
+
+    <owl:Class rdf:about="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/CoffeeShop">
+        <rdfs:subClassOf rdf:resource="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/RestaurantType"/>
+    </owl:Class>
+    
+
+
+    <!-- http:/www.city.ac.uk/inm713-in3067/2023/recruitable/HawaiianPizza -->
+
+    <owl:Class rdf:about="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/HawaiianPizza">
+        <rdfs:subClassOf rdf:resource="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/NamedPizza"/>
+    </owl:Class>
+    
+
+
+    <!-- http:/www.city.ac.uk/inm713-in3067/2023/recruitable/MeatLoverPizza -->
+
+    <owl:Class rdf:about="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/MeatLoverPizza">
+        <rdfs:subClassOf rdf:resource="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/NamedPizza"/>
+    </owl:Class>
+    
+
+
+    <!-- http:/www.city.ac.uk/inm713-in3067/2023/recruitable/NamedPizza -->
+
+    <owl:Class rdf:about="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/NamedPizza">
+        <rdfs:subClassOf rdf:resource="http://dbpedia.org/resource/Pizza"/>
+    </owl:Class>
+    
+
+
+    <!-- http:/www.city.ac.uk/inm713-in3067/2023/recruitable/PepperoniPizza -->
+
+    <owl:Class rdf:about="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/PepperoniPizza">
+        <rdfs:subClassOf rdf:resource="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/NamedPizza"/>
+    </owl:Class>
+    
+
+
+    <!-- http:/www.city.ac.uk/inm713-in3067/2023/recruitable/PizzaPlace -->
+
+    <owl:Class rdf:about="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/PizzaPlace">
+        <rdfs:subClassOf rdf:resource="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/RestaurantType"/>
+    </owl:Class>
+    
+
+
+    <!-- http:/www.city.ac.uk/inm713-in3067/2023/recruitable/RestaurantType -->
+
+    <owl:Class rdf:about="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/RestaurantType"/>
+    
+
+
+    <!-- http:/www.city.ac.uk/inm713-in3067/2023/recruitable/StreetName -->
+
+    <owl:Class rdf:about="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/StreetName">
+        <rdfs:subClassOf rdf:resource="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/AddressLine"/>
+    </owl:Class>
+    
+
+
+    <!-- http:/www.city.ac.uk/inm713-in3067/2023/recruitable/StreetNumber -->
+
+    <owl:Class rdf:about="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/StreetNumber">
+        <rdfs:subClassOf rdf:resource="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/AddressLine"/>
+    </owl:Class>
 </rdf:RDF>
 
 
 
-<!-- Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi -->
+<!-- Generated by the OWL API (version 4.5.25.2023-02-15T19:15:49Z) https://github.com/owlcs/owlapi -->
 
