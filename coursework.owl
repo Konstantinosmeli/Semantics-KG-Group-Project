@@ -1,12 +1,31 @@
 <?xml version="1.0"?>
 <rdf:RDF xmlns="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/"
      xml:base="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/"
+     xmlns:dc="http://purl.org/dc/elements/1.1/"
      xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rce="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/"
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
      xmlns:xml="http://www.w3.org/XML/1998/namespace"
      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
     <owl:Ontology rdf:about="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotation properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://purl.org/dc/elements/1.1/creator -->
+
+    <owl:AnnotationProperty rdf:about="http://purl.org/dc/elements/1.1/creator"/>
 </rdf:RDF>
 
 
