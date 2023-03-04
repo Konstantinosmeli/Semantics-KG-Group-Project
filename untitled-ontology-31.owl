@@ -53,11 +53,11 @@
 
     <!-- http://www.w3.org/2002/07/owl#topObjectProperty -->
 
-    <rdf:Description rdf:about="http://www.w3.org/2002/07/owl#topObjectProperty">
+    <owl:ObjectProperty rdf:about="http://www.w3.org/2002/07/owl#topObjectProperty">
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#SymmetricProperty"/>
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ReflexiveProperty"/>
-    </rdf:Description>
+    </owl:ObjectProperty>
     
 
 
@@ -244,7 +244,11 @@
     <!-- http://dbpedia.org/ontology/address -->
 
     <owl:Class rdf:about="http://dbpedia.org/ontology/address">
-        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">(Synonym) location</rdfs:label>
+        <rdfs:label>
+            <rdf:Description>
+                <rdfs:label xml:lang="en">(Synonym) location</rdfs:label>
+            </rdf:Description>
+        </rdfs:label>
     </owl:Class>
     
 
@@ -281,7 +285,11 @@
                 <owl:allValuesFrom rdf:resource="http://dbpedia.org/ontology/city"/>
             </owl:Restriction>
         </rdfs:subClassOf>
-        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">(Synonym) zip code</rdfs:label>
+        <rdfs:label>
+            <rdf:Description>
+                <rdfs:label xml:lang="en">(Synonym) zip code</rdfs:label>
+            </rdf:Description>
+        </rdfs:label>
     </owl:Class>
     
 
