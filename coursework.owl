@@ -238,7 +238,13 @@
     <!-- http://dbpedia.org/ontology/address -->
 
     <owl:Class rdf:about="http://dbpedia.org/ontology/address">
-        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">(Synonym) location</rdfs:label>
+        <rdfs:label>
+            <rdf:Description>
+                <rdfs:label xml:lang="en">(Synonym) location</rdfs:label>
+                <rdfs:label xml:lang="vn">địa chỉ</rdfs:label>
+                <rdfs:label xml:lang="el">τοποθεσία</rdfs:label>
+            </rdf:Description>
+        </rdfs:label>
     </owl:Class>
     
 
@@ -275,7 +281,11 @@
                 <owl:allValuesFrom rdf:resource="http://dbpedia.org/ontology/city"/>
             </owl:Restriction>
         </rdfs:subClassOf>
-        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">(Synonym) zip code</rdfs:label>
+        <rdfs:label>
+            <rdf:Description>
+                <rdfs:label xml:lang="en">(Synonym) zip code</rdfs:label>
+            </rdf:Description>
+        </rdfs:label>
     </owl:Class>
     
 
