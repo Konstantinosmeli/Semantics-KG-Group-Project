@@ -361,7 +361,7 @@
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/isCurrencyOf"/>
-                <owl:someValuesFrom rdf:resource="http://dbpedia.org/resource/Currency"/>
+                <owl:someValuesFrom rdf:resource="http://dbpedia.org/resource/Price"/>
             </owl:Restriction>
         </rdfs:subClassOf>
     </owl:Class>
