@@ -778,6 +778,16 @@
         <rdfs:subClassOf rdf:resource="http:/www.city.ac.uk/inm713-in3067/2023/recruitable/RestaurantType"/>
         <dc:creator rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Quang Huy Bui (Bùi Quang Huy)</dc:creator>
     </owl:Class>
+    <rdf:Description>
+        <dc:creator>Group: Recruitable</dc:creator>
+        <dc:creator rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Konstantinos Meli (Kωνσταντίνος Μελή)</dc:creator>
+        <dc:creator rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Quang Huy Bui (Quang Huy Bùi)</dc:creator>
+    </rdf:Description>
+    <rdf:Description>
+        <dc:creator>Group: Recruitable</dc:creator>
+        <dc:creator rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Konstantinos Meli (Kωνσταντίνος Μελή)</dc:creator>
+        <dc:creator rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Quang Huy Bui (Quang Huy Bùi)</dc:creator>
+    </rdf:Description>
 </rdf:RDF>
 
 
