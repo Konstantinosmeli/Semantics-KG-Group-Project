@@ -1,0 +1,475 @@
+@prefix : <http:/www.city.ac.uk/inm713-in3067/2023/recruitable/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix dbo: <http://dbpedia.org/ontology/> .
+@prefix dbr: <http://dbpedia.org/resource/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rce: <http:/www.city.ac.uk/inm713-in3067/2023/recruitable/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http:/www.city.ac.uk/inm713-in3067/2023/recruitable/> .
+
+<http:/www.city.ac.uk/inm713-in3067/2023/recruitable/> rdf:type owl:Ontology ;
+                                                        dc:creator "Group: Recruitable" ,
+                                                                   "Konstantinos Meli (Kωνσταντίνος Μελή)"^^xsd:string ,
+                                                                   "Quang Huy Bui (Bùi Quang Huy)" .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  http://purl.org/dc/elements/1.1/creator
+dc:creator rdf:type owl:AnnotationProperty .
+
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://dbpedia.org/property/locatedIn
+<http://dbpedia.org/property/locatedIn> rdf:type owl:ObjectProperty ,
+                                                 owl:TransitiveProperty .
+
+
+###  http:/www.city.ac.uk/inm713-in3067/2023/recruitable/hasAddress
+rce:hasAddress rdf:type owl:ObjectProperty ;
+               owl:inverseOf rce:isAddressOf ;
+               rdf:type owl:FunctionalProperty ,
+                        owl:AsymmetricProperty ;
+               rdfs:domain dbo:Restaurant ;
+               rdfs:range dbo:address .
+
+
+###  http:/www.city.ac.uk/inm713-in3067/2023/recruitable/hasCurrency
+rce:hasCurrency rdf:type owl:ObjectProperty ;
+                owl:inverseOf rce:isCurrencyOf ;
+                rdf:type owl:AsymmetricProperty ;
+                rdfs:domain dbr:Price ;
+                rdfs:range dbr:Currency .
+
+
+###  http:/www.city.ac.uk/inm713-in3067/2023/recruitable/hasIngredient
+rce:hasIngredient rdf:type owl:ObjectProperty ;
+                  rdfs:subPropertyOf owl:topObjectProperty ;
+                  owl:inverseOf rce:isIngredientOf ;
+                  rdf:type owl:AsymmetricProperty ;
+                  rdfs:domain <http://dbpedia.org/resource/Dish_(food)> ;
+                  rdfs:range dbo:Ingredients .
+
+
+###  http:/www.city.ac.uk/inm713-in3067/2023/recruitable/hasPrice
+rce:hasPrice rdf:type owl:ObjectProperty ;
+             owl:inverseOf rce:isPriceOf ;
+             rdf:type owl:AsymmetricProperty ;
+             rdfs:domain <http://dbpedia.org/resource/Dish_(food)> ;
+             rdfs:range dbr:Price .
+
+
+###  http:/www.city.ac.uk/inm713-in3067/2023/recruitable/hasType
+rce:hasType rdf:type owl:ObjectProperty ;
+            owl:inverseOf rce:isTypeOf ;
+            rdf:type owl:AsymmetricProperty ;
+            rdfs:domain dbo:Restaurant ;
+            rdfs:range rce:RestaurantType .
+
+
+###  http:/www.city.ac.uk/inm713-in3067/2023/recruitable/isAddressOf
+rce:isAddressOf rdf:type owl:ObjectProperty ,
+                         owl:AsymmetricProperty ;
+                rdfs:domain dbo:address ;
+                rdfs:range dbo:Restaurant .
+
+
+###  http:/www.city.ac.uk/inm713-in3067/2023/recruitable/isCurrencyOf
+rce:isCurrencyOf rdf:type owl:ObjectProperty ,
+                          owl:AsymmetricProperty .
+
+
+###  http:/www.city.ac.uk/inm713-in3067/2023/recruitable/isIngredientOf
+rce:isIngredientOf rdf:type owl:ObjectProperty ,
+                            owl:AsymmetricProperty .
+
+
+###  http:/www.city.ac.uk/inm713-in3067/2023/recruitable/isPriceOf
+rce:isPriceOf rdf:type owl:ObjectProperty ,
+                       owl:AsymmetricProperty .
+
+
+###  http:/www.city.ac.uk/inm713-in3067/2023/recruitable/isTypeOf
+rce:isTypeOf rdf:type owl:ObjectProperty ,
+                      owl:AsymmetricProperty ;
+             rdfs:domain rce:RestaurantType ;
+             rdfs:range dbo:Restaurant .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://dbpedia.org/ontology/name
+dbo:name rdf:type owl:DatatypeProperty ,
+                  owl:FunctionalProperty .
+
+
+###  http://dbpedia.org/ontology/value
+dbo:value rdf:type owl:DatatypeProperty .
+
+
+###  http:/www.city.ac.uk/inm713-in3067/2023/recruitable/hasStreetName
+rce:hasStreetName rdf:type owl:DatatypeProperty .
+
+
+###  http:/www.city.ac.uk/inm713-in3067/2023/recruitable/hasStreetNumber
+rce:hasStreetNumber rdf:type owl:DatatypeProperty .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://dbpedia.org/ontology/Ingredients
+dbo:Ingredients rdf:type owl:Class .
+
+
+###  http://dbpedia.org/ontology/Restaurant
+dbo:Restaurant rdf:type owl:Class ;
+               rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                 owl:onProperty rce:hasType ;
+                                 owl:someValuesFrom rce:RestaurantType
+                               ] ,
+                               [ rdf:type owl:Restriction ;
+                                 owl:onProperty rce:hasAddress ;
+                                 owl:allValuesFrom dbo:address
+                               ] ,
+                               [ rdf:type owl:Restriction ;
+                                 owl:onProperty dbo:name ;
+                                 owl:allValuesFrom xsd:string
+                               ] .
+
+
+###  http://dbpedia.org/ontology/address
+dbo:address rdf:type owl:Class ;
+            rdfs:label "(Synonym) location"^^xsd:string .
+
+
+###  http://dbpedia.org/ontology/city
+dbo:city rdf:type owl:Class ;
+         rdfs:subClassOf dbo:address ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty <http://dbpedia.org/property/locatedIn> ;
+                           owl:allValuesFrom dbo:state
+                         ] .
+
+
+###  http://dbpedia.org/ontology/country
+dbo:country rdf:type owl:Class ;
+            rdfs:subClassOf dbo:address .
+
+
+###  http://dbpedia.org/ontology/postalCode
+dbo:postalCode rdf:type owl:Class ;
+               rdfs:subClassOf dbo:address ,
+                               [ rdf:type owl:Restriction ;
+                                 owl:onProperty <http://dbpedia.org/property/locatedIn> ;
+                                 owl:allValuesFrom dbo:city
+                               ] ;
+               rdfs:label "(Synonym) zip code"^^xsd:string .
+
+
+###  http://dbpedia.org/ontology/state
+dbo:state rdf:type owl:Class ;
+          rdfs:subClassOf dbo:address ,
+                          [ rdf:type owl:Restriction ;
+                            owl:onProperty <http://dbpedia.org/property/locatedIn> ;
+                            owl:allValuesFrom dbo:country
+                          ] .
+
+
+###  http://dbpedia.org/resource/Bacon
+dbr:Bacon rdf:type owl:Class ;
+          rdfs:subClassOf dbr:Meat ;
+          rdfs:label [ rdfs:label "speck"@de ,
+                                  "thịt lợn muối xông khói"@vn ,
+                                  "tocino"@es
+                     ] .
+
+
+###  http://dbpedia.org/resource/Cheese
+dbr:Cheese rdf:type owl:Class ;
+           rdfs:subClassOf dbo:Ingredients .
+
+
+###  http://dbpedia.org/resource/Chili_sauce_and_paste
+dbr:Chili_sauce_and_paste rdf:type owl:Class ;
+                          rdfs:subClassOf dbr:Sauce .
+
+
+###  http://dbpedia.org/resource/Currency
+dbr:Currency rdf:type owl:Class ;
+             rdfs:subClassOf [ rdf:type owl:Restriction ;
+                               owl:onProperty rce:isCurrencyOf ;
+                               owl:someValuesFrom dbr:Currency
+                             ] .
+
+
+###  http://dbpedia.org/resource/Feta
+dbr:Feta rdf:type owl:Class ;
+         rdfs:subClassOf dbr:Cheese .
+
+
+###  http://dbpedia.org/resource/Fruit
+dbr:Fruit rdf:type owl:Class ;
+          rdfs:subClassOf dbo:Ingredients ;
+          owl:disjointWith dbr:Meat ,
+                           dbr:Vegetable .
+
+
+###  http://dbpedia.org/resource/Mayonnaise
+dbr:Mayonnaise rdf:type owl:Class ;
+               rdfs:subClassOf dbr:Sauce .
+
+
+###  http://dbpedia.org/resource/Meat
+dbr:Meat rdf:type owl:Class ;
+         rdfs:subClassOf dbo:Ingredients ;
+         owl:disjointWith dbr:Vegetable .
+
+
+###  http://dbpedia.org/resource/Menu
+dbr:Menu rdf:type owl:Class .
+
+
+###  http://dbpedia.org/resource/Mushroom
+dbr:Mushroom rdf:type owl:Class ;
+             rdfs:subClassOf dbr:Vegetable .
+
+
+###  http://dbpedia.org/resource/Olive
+dbr:Olive rdf:type owl:Class ;
+          rdfs:subClassOf dbr:Fruit .
+
+
+###  http://dbpedia.org/resource/Pepperoni
+dbr:Pepperoni rdf:type owl:Class ;
+              rdfs:subClassOf dbr:Meat .
+
+
+###  http://dbpedia.org/resource/Pineapple
+dbr:Pineapple rdf:type owl:Class ;
+              rdfs:subClassOf dbr:Fruit ;
+              rdfs:label [ rdfs:label "La piña"@es ,
+                                      "ananas"@de ,
+                                      "ananas"@fr
+                         ] .
+
+
+###  http://dbpedia.org/resource/Pizza
+dbr:Pizza rdf:type owl:Class ;
+          rdfs:subClassOf <http://dbpedia.org/resource/Dish_(food)> ;
+          rdfs:comment "An Italian dish consisting of a flat round bread base with cheese, tomatoes, vegetables, meat, etc. on top"^^xsd:string .
+
+
+###  http://dbpedia.org/resource/Pizza_Margherita
+dbr:Pizza_Margherita rdf:type owl:Class ;
+                     rdfs:subClassOf rce:NamedPizza ;
+                     rdfs:comment "Is a typical Neapolitan pizza, made with San Marzano tomatoes, mozzarella cheese, fresh basil, salt, and extra-virgin olive oil"^^xsd:string .
+
+
+###  http://dbpedia.org/resource/Price
+dbr:Price rdf:type owl:Class ;
+          rdfs:subClassOf [ rdf:type owl:Restriction ;
+                            owl:onProperty rce:hasCurrency ;
+                            owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                            owl:onClass dbr:Currency
+                          ] ,
+                          [ rdf:type owl:Restriction ;
+                            owl:onProperty dbo:value ;
+                            owl:allValuesFrom xsd:float
+                          ] .
+
+
+###  http://dbpedia.org/resource/Sauce
+dbr:Sauce rdf:type owl:Class ;
+          rdfs:subClassOf dbo:Ingredients .
+
+
+###  http://dbpedia.org/resource/Scallion
+dbr:Scallion rdf:type owl:Class ;
+             rdfs:subClassOf dbr:Vegetable ;
+             rdfs:label "Spring onion"^^xsd:string .
+
+
+###  http://dbpedia.org/resource/Tomato
+dbr:Tomato rdf:type owl:Class ;
+           rdfs:subClassOf dbr:Vegetable ;
+           rdfs:label [ rdfs:label "cà chua"@vn ,
+                                   "ντομάτα"@el
+                      ] .
+
+
+###  http://dbpedia.org/resource/Vegetable
+dbr:Vegetable rdf:type owl:Class ;
+              rdfs:subClassOf dbo:Ingredients .
+
+
+###  http://dbpedia.org/resource/Dish_(food)
+<http://dbpedia.org/resource/Dish_(food)> rdf:type owl:Class ;
+                                          rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                                            owl:onProperty rce:isIngredientOf ;
+                                                            owl:someValuesFrom <http://dbpedia.org/resource/Dish_(food)>
+                                                          ] ,
+                                                          [ rdf:type owl:Restriction ;
+                                                            owl:onProperty rce:hasPrice ;
+                                                            owl:allValuesFrom dbr:Price
+                                                          ] ,
+                                                          [ rdf:type owl:Restriction ;
+                                                            owl:onProperty rce:hasIngredient ;
+                                                            owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                            owl:onClass dbo:Ingredients
+                                                          ] .
+
+
+###  http:/www.city.ac.uk/inm713-in3067/2023/recruitable/AddressLine
+rce:AddressLine rdf:type owl:Class ;
+                rdfs:subClassOf dbo:address ,
+                                [ rdf:type owl:Restriction ;
+                                  owl:onProperty <http://dbpedia.org/property/locatedIn> ;
+                                  owl:allValuesFrom dbo:postalCode
+                                ] ,
+                                [ rdf:type owl:Restriction ;
+                                  owl:onProperty rce:hasStreetName ;
+                                  owl:allValuesFrom xsd:string
+                                ] ,
+                                [ rdf:type owl:Restriction ;
+                                  owl:onProperty rce:hasStreetNumber ;
+                                  owl:allValuesFrom xsd:nonNegativeInteger
+                                ] .
+
+
+###  http:/www.city.ac.uk/inm713-in3067/2023/recruitable/AmericanRestaurant
+rce:AmericanRestaurant rdf:type owl:Class ;
+                       rdfs:subClassOf rce:RestaurantType .
+
+
+###  http:/www.city.ac.uk/inm713-in3067/2023/recruitable/Bakery
+rce:Bakery rdf:type owl:Class ;
+           rdfs:subClassOf rce:RestaurantType ;
+           rdfs:comment "A place where bread and cakes are made and/or sold"^^xsd:string ;
+           rdfs:label [ rdfs:label "tiệm bánh"@vn ,
+                                   "αρτοποιείο"@el
+                      ] .
+
+
+###  http:/www.city.ac.uk/inm713-in3067/2023/recruitable/Bar
+rce:Bar rdf:type owl:Class ;
+        rdfs:subClassOf rce:RestaurantType ;
+        rdfs:comment "A place where you can buy and drink alcoholic and other drinks"^^xsd:string .
+
+
+###  http:/www.city.ac.uk/inm713-in3067/2023/recruitable/CheesePizza
+rce:CheesePizza rdf:type owl:Class ;
+                rdfs:subClassOf rce:NamedPizza .
+
+
+###  http:/www.city.ac.uk/inm713-in3067/2023/recruitable/CoffeeShop
+rce:CoffeeShop rdf:type owl:Class ;
+               rdfs:subClassOf rce:RestaurantType ;
+               rdfs:comment "A small restaurant, often in a store, hotel, etc., where coffee, tea, other drinks without alcohol and simple food are served"^^xsd:string .
+
+
+###  http:/www.city.ac.uk/inm713-in3067/2023/recruitable/GreekRestaurant
+rce:GreekRestaurant rdf:type owl:Class ;
+                    rdfs:subClassOf rce:RestaurantType ;
+                    dc:creator "Konstantinos Meli (Kωνσταντίνος Μελή)"^^xsd:string ;
+                    rdfs:comment "A Greek restaurant is a restaurant that specializes in Greek cuisine. Their food is colorful and incredibly nutritious. In addition Greek food has a reputation for being heart healthy. This is because it uses olive oil, fish, lean meats, vegetables, herbs and grain."^^xsd:string .
+
+
+###  http:/www.city.ac.uk/inm713-in3067/2023/recruitable/HawaiianPizza
+rce:HawaiianPizza rdf:type owl:Class ;
+                  rdfs:subClassOf rce:NamedPizza ;
+                  rdfs:comment "Hawaiian pizza is a pizza originating in Canada, and is traditionally topped with pineapple, tomato sauce, cheese, and either ham or bacon."^^xsd:string .
+
+
+###  http:/www.city.ac.uk/inm713-in3067/2023/recruitable/KonstantinosPizza
+rce:KonstantinosPizza rdf:type owl:Class ;
+                      rdfs:subClassOf rce:NamedPizza ,
+                                      [ rdf:type owl:Restriction ;
+                                        owl:onProperty rce:hasIngredient ;
+                                        owl:allValuesFrom [ rdf:type owl:Class ;
+                                                            owl:unionOf ( dbr:Feta
+                                                                          dbr:Olive
+                                                                          dbr:Tomato
+                                                                        )
+                                                          ]
+                                      ] ;
+                      dc:creator "Konstantinos Meli (Kωνσταντίνος Μελή)"^^xsd:string .
+
+
+###  http:/www.city.ac.uk/inm713-in3067/2023/recruitable/MeatLoverPizza
+rce:MeatLoverPizza rdf:type owl:Class ;
+                   rdfs:subClassOf rce:NamedPizza ;
+                   rdfs:comment "A type of pizza, topped off with two types of cheese, bacon, ham, pepperoni and hot sausage"^^xsd:string .
+
+
+###  http:/www.city.ac.uk/inm713-in3067/2023/recruitable/NamedPizza
+rce:NamedPizza rdf:type owl:Class ;
+               rdfs:subClassOf dbr:Pizza .
+
+
+###  http:/www.city.ac.uk/inm713-in3067/2023/recruitable/PepperoniPizza
+rce:PepperoniPizza rdf:type owl:Class ;
+                   rdfs:subClassOf rce:NamedPizza ;
+                   rdfs:comment "Pepperoni is an American variety of spicy salami made from cured pork and beef seasoned with paprika or other chili pepper"^^xsd:string .
+
+
+###  http:/www.city.ac.uk/inm713-in3067/2023/recruitable/PizzaPlace
+rce:PizzaPlace rdf:type owl:Class ;
+               rdfs:subClassOf rce:RestaurantType .
+
+
+###  http:/www.city.ac.uk/inm713-in3067/2023/recruitable/RestaurantType
+rce:RestaurantType rdf:type owl:Class ;
+                   rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                     owl:onProperty rce:isTypeOf ;
+                                     owl:someValuesFrom dbo:Restaurant
+                                   ] .
+
+
+###  http:/www.city.ac.uk/inm713-in3067/2023/recruitable/StreetName
+rce:StreetName rdf:type owl:Class ;
+               rdfs:subClassOf rce:AddressLine .
+
+
+###  http:/www.city.ac.uk/inm713-in3067/2023/recruitable/StreetNumber
+rce:StreetNumber rdf:type owl:Class ;
+                 rdfs:subClassOf rce:AddressLine .
+
+
+###  http:/www.city.ac.uk/inm713-in3067/2023/recruitable/VietnamesePizza
+rce:VietnamesePizza rdf:type owl:Class ;
+                    rdfs:subClassOf rce:NamedPizza ,
+                                    [ rdf:type owl:Restriction ;
+                                      owl:onProperty rce:hasIngredient ;
+                                      owl:allValuesFrom [ rdf:type owl:Class ;
+                                                          owl:unionOf ( dbr:Sauce
+                                                                        [ owl:intersectionOf ( dbr:Bacon
+                                                                                               dbr:Scallion
+                                                                                             ) ;
+                                                                          rdf:type owl:Class
+                                                                        ]
+                                                                      )
+                                                        ]
+                                    ] ;
+                    dc:creator "Quang Huy Bui (Bùi Quang Huy)"^^xsd:string ;
+                    rdfs:label [ rdfs:label "Bánh tráng nướng"@vn
+                               ] .
+
+
+###  http:/www.city.ac.uk/inm713-in3067/2023/recruitable/VietnameseRestaurant
+rce:VietnameseRestaurant rdf:type owl:Class ;
+                         rdfs:subClassOf rce:RestaurantType ;
+                         dc:creator "Quang Huy Bui (Bùi Quang Huy)"^^xsd:string .
+
+
+###  Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi
