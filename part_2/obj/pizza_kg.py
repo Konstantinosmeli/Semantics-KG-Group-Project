@@ -76,7 +76,7 @@ class PizzaKG(object):
 
         # List all character is not alphanumeric and and white space
         non_alphanumeric_chars = [
-            e for e in chars if (not e.isalnum()) & (not e == " ")
+            e for e in chars if (not e.isalnum()) & (e not in [" ", "'"])
         ]
 
         # Dictionary to replace meaningful non-alphanumeric characters
