@@ -8,6 +8,7 @@ import numpy as np
 from rdflib import Graph, Namespace
 
 import obj.lookup as lookup
+from obj.isub import isub
 
 # Default prefixes represent data from public knowledge graphs
 DEFAULT_PREFIXES = [
@@ -26,7 +27,7 @@ class PizzaKG(object):
     file_path: str
     name_space_str: str
     prefix: str
-    string_uri_dict: dict
+    string_uri_dict: dict()
 
     def __init__(
         self,
@@ -35,7 +36,6 @@ class PizzaKG(object):
         _name_space_prefix,
         _prefixes=DEFAULT_PREFIXES,
     ) -> None:
-
         super().__init__()
 
         # Setup input file as data
@@ -81,7 +81,6 @@ class PizzaKG(object):
         for prefix in prefixes:
             self.graph.bind(prefix[0], prefix[1])
 
-
     def str_column_preprocessing(self, column: str):
         """
         Only do preprocessing with string column, not numeric
@@ -107,16 +106,14 @@ class PizzaKG(object):
         ]
 
         # Dictionary to replace meaningful non-alphanumeric characters
-        meaningful_non_alphanumeric = {
-            "@": "at",
-            "&": "and",
-            "+": "with"
-        }
+        meaningful_non_alphanumeric = {"@": "at", "&": "and", "+": "with"}
 
         # Remove meaningful non-alphanumeric characters from the list
         # Since we will not remove them, but replace them
         non_alphanumeric_chars = [
-            e for e in non_alphanumeric_chars if e not in meaningful_non_alphanumeric.keys()
+            e
+            for e in non_alphanumeric_chars
+            if e not in meaningful_non_alphanumeric.keys()
         ]
 
         # Replace all meaningful non-alphanumeric characters
@@ -128,7 +125,6 @@ class PizzaKG(object):
 
         # Remove consecutive white-trailing
         self.data[column] = self.data[column].str.replace(r" +", " ", regex=False)
-
 
     def numeric_column_preprocessing(self, column: str):
         """
@@ -158,5 +154,51 @@ class PizzaKG(object):
 
         # Check if match exist and then replace
         if matched:
-            return re.sub(r'(\w+), (\w+)', r'\2 \1', item_name)
+            return re.sub(r"(\w+), (\w+)", r"\2 \1", item_name)
         return item_name
+
+    def csv_to_rdf(self):
+        return 0
+
+    def generate_type_triple(self):
+        return 0
+
+    def generate_external_uri(
+        self, _query: str, _category_filter: str = "", _limit: int = 5
+    ):
+        """
+        Use pre-written lookup code to look for the enitity on services.
+        Currently, we are implementing DBpedia and Wikidata.
+        We will expect to extend the search to Google KG in the future
+        since entity URI from Google KG is different from other services
+        :param _query:
+        :param _category_filter:
+        :param _limit:
+        :return: uri:
+        """
+
+        # Query all services and return
+        dbpedia_result = self.dbpedia.getKGEntities(
+            query=_query, limit=_limit, category_filter=_category_filter
+        )
+        wikidata_result = self.wikidata.getKGEntities(query=_query, limit=_limit)
+
+        # Concentrate the result and then return
+        entities = [
+            *dbpedia_result,
+            *wikidata_result,
+        ]
+
+        # Parameters for comparation
+        score = -1
+        uri = ""
+
+        # Iterate returned array and check for the most correct result
+        if entities:
+            for entity in entities:
+                _score = isub(_query, entity.label)
+                if _score > score:
+                    uri = entity.ident
+                    score = _score
+
+        return uri
