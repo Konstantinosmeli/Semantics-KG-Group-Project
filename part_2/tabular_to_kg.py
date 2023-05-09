@@ -1,4 +1,5 @@
 from obj.pizza_kg import PizzaKG
+import numpy as np
 
 # Constrains and settings
 FILE_PATH = "./cw_data/IN3067-INM713_coursework_data_pizza_500.csv"

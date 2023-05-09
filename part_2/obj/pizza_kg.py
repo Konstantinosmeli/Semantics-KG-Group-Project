@@ -1,7 +1,10 @@
 """
 Some description
 """
+import re
+
 import pandas as pd
+import numpy as np
 from rdflib import Graph, Namespace
 
 import obj.lookup as lookup
@@ -61,13 +64,22 @@ class PizzaKG(object):
         # Preprocess all columns
         for column in self.data.columns:
             if self.data[column].dtype not in ["int", "float64"]:
-                self.column_preprocessing(column)
+                self.str_column_preprocessing(column)
+            self.numeric_column_preprocessing(column)
+
+        # Preprocess pizza name
+        self.data["menu item"] = self.data["menu item"].apply(
+            lambda row: self.menu_name_preprocessing(row)
+        )
 
     def bind_prefixes(self, prefixes):
         for prefix in prefixes:
             self.graph.bind(prefix[0], prefix[1])
 
-    def column_preprocessing(self, column: str):
+    def str_column_preprocessing(self, column: str):
+        # Fill all missing values of numeric columns
+        self.data[column] = self.data[column].fillna(" ")
+
         # Convert all data (including missing to string)
         self.data[column] = self.data[column].astype(str)
 
@@ -76,7 +88,7 @@ class PizzaKG(object):
 
         # List all character is not alphanumeric and and white space
         non_alphanumeric_chars = [
-            e for e in chars if (not e.isalnum()) & (e not in [" ", "'"])
+            e for e in chars if (not e.isalnum()) & (e not in [" ", "'", ","])
         ]
 
         # Dictionary to replace meaningful non-alphanumeric characters
@@ -95,9 +107,29 @@ class PizzaKG(object):
         # Replace all meaningful non-alphanumeric characters
         self.data.replace({column: meaningful_non_alphanumeric}, inplace=True)
 
-        # Remove all non-meaningful non-alphanumeric characters
+        # Remove all non-meaningful non-alphanumeric char        # Fill all missing values
+        #         self.data[column] = self.data[column].fillna("hahaha")acters
         for e in non_alphanumeric_chars:
             self.data[column] = self.data[column].str.replace(e, " ", regex=False)
 
         # Remove consecutive white-trailing
         self.data[column] = self.data[column].str.replace(r" +", " ", regex=False)
+
+
+    def numeric_column_preprocessing(self, column: str):
+        # Fill all missing values of numeric columns
+        self.data[column] = self.data[column].fillna(np.nan)
+
+    def menu_name_preprocessing(self, item_name: str):
+        item_name = item_name.lower()
+
+        # Menu item pattern, for example "Pizza, Margherita"
+        pattern = re.compile(r"^pizza\s?,\s?[a-z\s]+.$")
+
+        # Match result
+        matched = re.search(pattern, item_name)
+
+        # Check if match exist and then replace
+        if matched:
+            return re.sub(r'(\w+), (\w+)', r'\2 \1', item_name)
+        return item_name
