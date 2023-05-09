@@ -22,7 +22,6 @@ DEFAULT_PREFIXES = [
 
 
 class PizzaKG(object):
-
     # Setting of knowledge graphs object
     file_path: str
     name_space_str: str
@@ -73,11 +72,27 @@ class PizzaKG(object):
         )
 
     def bind_prefixes(self, prefixes):
+        """
+        Since we will link the data with public KG, we will need to define
+        and bind the prefixes for them
+        :param prefixes:
+        :return: None
+        """
         for prefix in prefixes:
             self.graph.bind(prefix[0], prefix[1])
 
+
     def str_column_preprocessing(self, column: str):
-        # Fill all missing values of numeric columns
+        """
+        Only do preprocessing with string column, not numeric
+        We will remove special character that might broke the seach
+        However, there are some character that contain meaning, we will not
+        remove them, instead, we will replace
+        :param column:
+        :return: None
+        """
+
+        # Fill all missing values with space
         self.data[column] = self.data[column].fillna(" ")
 
         # Convert all data (including missing to string)
@@ -117,10 +132,23 @@ class PizzaKG(object):
 
 
     def numeric_column_preprocessing(self, column: str):
+        """
+        For numeric column, we will replace with numpy.nan
+        :param column:
+        :return:
+        """
         # Fill all missing values of numeric columns
         self.data[column] = self.data[column].fillna(np.nan)
 
     def menu_name_preprocessing(self, item_name: str):
+        """
+        We do notice that there are some pizza name that in this format:
+        "Pizza, Margherita", we will try to find and match them using
+        regular expression and then change them to format "margherita pizza"
+        :param item_name:
+        :return: processed item name
+        """
+
         item_name = item_name.lower()
 
         # Menu item pattern, for example "Pizza, Margherita"
