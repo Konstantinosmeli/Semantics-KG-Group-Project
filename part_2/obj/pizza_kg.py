@@ -122,8 +122,7 @@ class PizzaKG(object):
         # Replace all meaningful non-alphanumeric characters
         self.data.replace({column: meaningful_non_alphanumeric}, inplace=True)
 
-        # Remove all non-meaningful non-alphanumeric char        # Fill all missing values
-        #         self.data[column] = self.data[column].fillna("hahaha")acters
+        # Remove all non-meaningful non-alphanumeric char
         for e in non_alphanumeric_chars:
             self.data[column] = self.data[column].str.replace(e, " ", regex=False)
 
