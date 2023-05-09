@@ -27,3 +27,12 @@ Temporary Items
 .apdisk
 
 .DS_Store
+/.idea/.gitignore
+/.idea/csv-editor.xml
+/.idea/LNKD.tech Editor.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/inspectionProfiles/profiles_settings.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/Semantics-KG-Group-Project.iml
+/.idea/vcs.xml
