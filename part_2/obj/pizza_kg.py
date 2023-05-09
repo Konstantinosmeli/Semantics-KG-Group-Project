@@ -60,16 +60,37 @@ class PizzaKG(object):
         self.wikidata = lookup.WikidataAPI()
         self.google_kg = lookup.GoogleKGLookup()
 
-        # Preprocess all columns
-        for column in self.data.columns:
-            if self.data[column].dtype not in ["int", "float64"]:
-                self.str_column_preprocessing(column)
-            self.numeric_column_preprocessing(column)
+        columns = ['name','address','city','country','postcode','state','categories','menu item','item value','currency','item description']
 
-        # Preprocess pizza name
-        self.data["menu item"] = self.data["menu item"].apply(
-            lambda row: self.menu_name_preprocessing(row)
-        )
+        #Check valid dataset
+        valid = self.check_dataset_cols(columns)
+
+        if valid:
+            # Preprocess all columns
+            for column in self.data.columns:
+                if self.data[column].dtype not in ["int", "float64"]:
+                    self.str_column_preprocessing(column)
+                self.numeric_column_preprocessing(column)
+
+            # Preprocess pizza name
+            self.data["menu item"] = self.data["menu item"].apply(
+                lambda row: self.menu_name_preprocessing(row)
+            )
+
+
+    def check_dataset_cols(self,columns):
+        """
+        Before doing any pre-prcessing the dataset needs to be validated to
+        avoid unnescesary work, by checking that all columns that are needed
+        to continue are identified
+        """
+        if set([columns]).issubset(self.data.columns):
+            print('Dataset contains correct columns')
+            return True
+        else:
+            print('Columns expected are missing')
+            return False
+
 
     def bind_prefixes(self, prefixes):
         """
