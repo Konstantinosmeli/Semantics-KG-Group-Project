@@ -5,7 +5,8 @@ import re
 
 import pandas as pd
 import numpy as np
-from rdflib import Graph, Namespace
+from rdflib import Graph, Namespace, URIRef, Literal
+from rdflib.namespace import RDF, XSD
 
 import obj.lookup as lookup
 from obj.isub import isub
@@ -27,7 +28,9 @@ class PizzaKG(object):
     file_path: str
     name_space_str: str
     prefix: str
-    string_uri_dict: dict()
+    entity_uri_dict: dict = {}
+    enable_external_uri: bool = True
+    external_uri_score_threshold = 0.5
 
     def __init__(
         self,
@@ -157,11 +160,36 @@ class PizzaKG(object):
             return re.sub(r"(\w+), (\w+)", r"\2 \1", item_name)
         return item_name
 
-    def csv_to_rdf(self):
-        return 0
+    def generate_uri(
+        self,
+        entity: str,
+        _enable_external_uri: bool = enable_external_uri,
+        _category_filter: str = "",
+    ):
+        """
+        We will generate URI for the entity, note that there are some logic:
+        - We can choose if we need to use external KG
+        - We can also choose the threshold for lexical similiarity
+            For example: if the lexical similarity is too low, we would rather create entity URI
+            in our default namespace
+        :param entity:
+        :param _enable_external_uri:
+        :param _category_filter:
+        :return:
+        """
+        uri = self.name_space_str + self.process_entity_lexical(_entity=entity)
 
-    def generate_type_triple(self):
-        return 0
+        if _enable_external_uri:
+            _uri, _score = self.generate_external_uri(
+                _query=entity,
+                _category_filter=_category_filter,
+            )
+            if (_uri != "") & (_score > self.external_uri_score_threshold):
+                uri = _uri
+
+        self.entity_uri_dict[entity] = uri
+
+        return uri
 
     def generate_external_uri(
         self, _query: str, _category_filter: str = "", _limit: int = 5
@@ -201,4 +229,20 @@ class PizzaKG(object):
                     uri = entity.ident
                     score = _score
 
-        return uri
+        return uri, score
+
+    def is_missing(self, value: str):
+        """
+        Check if a value is empty, blank or missing
+        :param value:
+        :return:
+        """
+        return (value != value) or (value is None) or (value == "") or (value == np.nan)
+
+    def process_entity_lexical(self, _entity: str):
+        """
+        Remove characters that could break URI
+        :param _entity:
+        :return:
+        """
+        return _entity.replace(" ", "_").replace("(", "").replace(")", "")
