@@ -12,5 +12,5 @@ if __name__ == '__main__':
                        _name_space_str=NAMESPACE_STR,
                        _name_space_prefix=NAMESPACE_PREFIX)
 
-    pizza_kg.generate_uri(entity="London")
-    print(pizza_kg.entity_uri_dict)
+    pizza_kg.convert_csv_to_rdf()
+    pizza_kg.save_graph("test1.ttl")

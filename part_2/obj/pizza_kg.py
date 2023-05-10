@@ -20,6 +20,7 @@ DEFAULT_PREFIXES = [
     ("skos", "http://www.w3.org/2004/02/skos/core#"),
     ("xml", "http://www.w3.org/XML/1998/namespace"),
     ("xsd", "http://www.w3.org/2001/XMLSchema#"),
+    ("dbr", "http://dbpedia.org/resource/")
 ]
 
 
@@ -30,7 +31,7 @@ class PizzaKG(object):
     prefix: str
     entity_uri_dict: dict = {}
     enable_external_uri: bool = True
-    external_uri_score_threshold = 0.5
+    external_uri_score_threshold = 0.4
 
     def __init__(
         self,
@@ -74,6 +75,38 @@ class PizzaKG(object):
             lambda row: self.menu_name_preprocessing(row)
         )
 
+    ######### MAIN TASK: CSV TO RDF CONVERSION #########
+    def convert_csv_to_rdf(self, _enable_external_uri: bool = enable_external_uri):
+        """
+        Convert data from dataframe to rdf
+        :param _enable_external_uri:
+        :return:
+        """
+        # Country
+        self.data["country"].apply(
+            lambda x: self.generate_type_triple(
+                entity=x,
+                class_type=self.name_space.Country,
+                _enable_external_uri=_enable_external_uri,
+                _category_filter="http://dbpedia.org/resource/Category:Lists_of_countries",
+            )
+        )
+
+        self.data.apply(
+            lambda row: self.generate_literal_triple(
+                entity=row["country"],
+                predicate=self.name_space.name,
+                literal=row["country"],
+                datatype=XSD.string
+            ),
+            axis=1
+        )
+
+        # Currency
+
+
+
+    ######### PREPROCESSINGS #########
     def bind_prefixes(self, prefixes):
         """
         Since we will link the data with public KG, we will need to define
@@ -160,6 +193,15 @@ class PizzaKG(object):
             return re.sub(r"(\w+), (\w+)", r"\2 \1", item_name)
         return item_name
 
+    def process_entity_lexical(self, _entity: str):
+        """
+        Remove characters that could break URI
+        :param _entity:
+        :return:
+        """
+        return _entity.replace(" ", "_").replace("(", "").replace(")", "")
+
+    ######### ENTITY GENERATION #########
     def generate_uri(
         self,
         entity: str,
@@ -187,7 +229,7 @@ class PizzaKG(object):
             if (_uri != "") & (_score > self.external_uri_score_threshold):
                 uri = _uri
 
-        self.entity_uri_dict[entity] = uri
+        self.entity_uri_dict[entity.lower()] = uri
 
         return uri
 
@@ -211,6 +253,10 @@ class PizzaKG(object):
         )
         wikidata_result = self.wikidata.getKGEntities(query=_query, limit=_limit)
 
+        # Mute wikidata if we specify search category inside DBpedia
+        if re.search(r"dbpedia\.org", _category_filter):
+            wikidata_result = []
+
         # Concentrate the result and then return
         entities = [
             *dbpedia_result,
@@ -231,6 +277,74 @@ class PizzaKG(object):
 
         return uri, score
 
+    ######### TRIPLES GENERATIONS #########
+    def generate_type_triple(
+        self,
+        entity: str,
+        class_type: str,
+        _enable_external_uri: bool = enable_external_uri,
+        _category_filter: str = "",
+    ):
+        """
+        Generate type triple: Example: ns:London rdf:type ns:City
+        :param entity:
+        :param class_type:
+        :param _enable_external_uri:
+        :param _category_filter:
+        :return:
+        """
+        # Check blank or empty
+        if self.is_missing(entity):
+            return
+
+        # Check if item exist in dictionary so that we don't have to call API again
+        if entity.lower() in self.entity_uri_dict:
+            uri = self.entity_uri_dict[entity.lower()]
+        else:
+            uri = self.generate_uri(
+                entity=entity,
+                _enable_external_uri=_enable_external_uri,
+                _category_filter=_category_filter,
+            )
+
+        # Add type triple
+        self.graph.add((URIRef(uri), RDF.type, class_type))
+
+    def generate_literal_triple(
+        self, entity: str, predicate: str, literal: str, datatype: str
+    ):
+        """
+        Generate literal triple: Example: ns:London ns:name "London"^^xsd:string
+        :param entity:
+        :param predicate:
+        :param literal:
+        :param datatype:
+        :return:
+        """
+        # If the literal is blank or empty, we will pass it
+        if self.is_missing(literal):
+            pass
+
+        # Get the URI from dictionary
+        uri = self.entity_uri_dict[entity.lower()]
+
+        # Get the literal
+        _literal = Literal(literal, datatype=datatype)
+
+        # Add literal to graph
+        self.graph.add((URIRef(uri), predicate, _literal))
+
+    ######### SAVE GRAPH #########
+    def save_graph(self, output_file: str, _format: str = "ttl"):
+        """
+        Just a function to save graph as file
+        :param output_file:
+        :param _format:
+        :return:
+        """
+        self.graph.serialize(destination=output_file, format=_format)
+
+    ######### VALIDATIONS #########
     def is_missing(self, value: str):
         """
         Check if a value is empty, blank or missing
@@ -238,11 +352,3 @@ class PizzaKG(object):
         :return:
         """
         return (value != value) or (value is None) or (value == "") or (value == np.nan)
-
-    def process_entity_lexical(self, _entity: str):
-        """
-        Remove characters that could break URI
-        :param _entity:
-        :return:
-        """
-        return _entity.replace(" ", "_").replace("(", "").replace(")", "")
