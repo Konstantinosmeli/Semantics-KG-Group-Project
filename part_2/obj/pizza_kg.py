@@ -8,6 +8,8 @@ import pandas as pd
 import numpy as np
 from rdflib import Graph, Namespace, URIRef, Literal
 from rdflib.namespace import RDF, XSD
+from rdflib.util import guess_format
+import owlrl
 
 import obj.lookup as lookup
 from obj.isub import isub
@@ -34,7 +36,7 @@ class PizzaKG(object):
     name_space_str: str
     prefix: str
     entity_uri_dict: dict = {}
-    enable_external_uri: bool = True
+    enable_external_uri: bool = False
     external_uri_score_threshold = 0.4
 
     def __init__(
@@ -214,7 +216,7 @@ class PizzaKG(object):
         self.data.apply(
             lambda row: self.generate_literal_triple(
                 entity=row["restaurant_identifier"],
-                predicate=self.name_space.address,
+                predicate=self.name_space.firstLineAddress,
                 literal=row["address"],
                 datatype=XSD.string,
             ),
@@ -241,7 +243,7 @@ class PizzaKG(object):
         self.data.apply(
             lambda row: self.generate_literal_triple(
                 entity=row["restaurant_identifier"],
-                predicate=self.name_space.postcode,
+                predicate=self.name_space.postCode,
                 literal=str(row["postcode"]),
                 datatype=XSD.string,
             ),
@@ -290,14 +292,14 @@ class PizzaKG(object):
             axis=1,
         )
 
-        # Menu item
+        # Menu itemm since all data is Pizza, we will set them directly as pizza
         self.data["item_identifier"] = self.data[
             ["menu item", "restaurant_identifier"]
         ].apply(lambda row: " ".join(row.values.astype(str)), axis=1)
         self.data["item_identifier"].apply(
             lambda x: self.generate_type_triple(
                 entity=x,
-                class_type=self.name_space.MenuItem,
+                class_type=self.name_space.Pizza,
                 _enable_external_uri=False,
             )
         )
@@ -324,24 +326,6 @@ class PizzaKG(object):
         self.data.apply(
             lambda row: self.generate_literal_triple(
                 entity=row["item_identifier"],
-                predicate=self.name_space.price,
-                literal=row["item value"],
-                datatype=XSD.float,
-            ),
-            axis=1,
-        )
-        self.data.apply(
-            lambda row: self.generate_literal_triple(
-                entity=row["item_identifier"],
-                predicate=self.name_space.item_currency,
-                literal=row["currency"],
-                datatype=XSD.string,
-            ),
-            axis=1,
-        )
-        self.data.apply(
-            lambda row: self.generate_literal_triple(
-                entity=row["item_identifier"],
                 predicate=self.name_space.item_description,
                 literal=row["item description"],
                 datatype=XSD.string,
@@ -353,6 +337,44 @@ class PizzaKG(object):
                 subject=row["item_identifier"],
                 predicates=[self.name_space.servedIn],
                 object=row["restaurant_identifier"],
+            ),
+            axis=1,
+        )
+
+        # Price
+        self.data["price"] = self.data[
+            ["item value", "currency"]
+        ].apply(lambda row: " ".join(row.values.astype(str)), axis=1)
+        self.data["price"].apply(
+            lambda x: self.generate_type_triple(
+                entity=x,
+                class_type=self.name_space.ItemValue,
+                _enable_external_uri=False,
+            )
+        )
+        self.data.apply(
+            lambda row: self.generate_literal_triple(
+                entity=row["item_identifier"],
+                predicate=self.name_space.hasValue,
+                literal=row["price"],
+                datatype=XSD.string,
+            ),
+            axis=1,
+        )
+        self.data.apply(
+            lambda row: self.generate_literal_triple(
+                entity=row["price"],
+                predicate=self.name_space.amount,
+                literal=row["item value"],
+                datatype=XSD.double,
+            ),
+            axis=1,
+        )
+        self.data.apply(
+            lambda row: self.generate_object_triple(
+                subject=row["price"],
+                predicates=[self.name_space.amountCurrency],
+                object=row["currency"],
             ),
             axis=1,
         )
@@ -612,6 +634,21 @@ class PizzaKG(object):
 
         for predicate in predicates:
             self.graph.add((URIRef(subject_uri), predicate, URIRef(object_uri)))
+
+    ######### REASONING #########
+    def perform_reasoning(self, ontology: str):
+        # Load the ontology file
+        self.graph.load(ontology, format=guess_format(ontology))
+
+        # print("Triples including ontology: '" + str(len(self.graph) + "'."))
+
+        owlrl.DeductiveClosure(
+            owlrl.OWLRL.OWLRL_Semantics,
+            axiomatic_triples=False,
+            datatype_axioms=False,
+        ).expand(self.graph)
+
+        print("Triples after OWL 2 RL reasoning: '" + str(len(self.graph)) + "'.")
 
     ######### SAVE GRAPH #########
     def save_graph(self, output_file: str, _format: str = "ttl"):
