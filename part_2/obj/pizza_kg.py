@@ -2,6 +2,7 @@
 Some description
 """
 import re
+import time
 
 import pandas as pd
 import numpy as np
@@ -49,7 +50,7 @@ class PizzaKG(object):
         self.file_path = _file_path
         self.data = pd.read_csv(
             self.file_path, delimiter=",", quotechar='"', escapechar="\\"
-        ).head(15) # TODO remove head
+        )
 
         # Initialise the graph
         self.graph = Graph()
@@ -85,6 +86,10 @@ class PizzaKG(object):
         :param _enable_external_uri:
         :return:
         """
+
+        start_time = time.time()
+        print("######### STARTING CONVERSION #########")
+
         # Country
         self.data["country"].apply(
             lambda x: self.generate_type_triple(
@@ -151,7 +156,7 @@ class PizzaKG(object):
         self.data.apply(
             lambda row: self.generate_object_triple(
                 subject=row["state"],
-                predicates=[self.name_space.isStateOf, self.name_space.isLocatedIn],
+                predicates=[self.name_space.isStateOf, self.name_space.locatedIn],
                 object=row["country"],
             ),
             axis=1,
@@ -178,7 +183,7 @@ class PizzaKG(object):
         self.data.apply(
             lambda row: self.generate_object_triple(
                 subject=row["city"],
-                predicates=[self.name_space.isCityOf, self.name_space.isLocatedIn],
+                predicates=[self.name_space.isCityOf, self.name_space.locatedIn],
                 object=row["state"],
             ),
             axis=1,
@@ -186,14 +191,7 @@ class PizzaKG(object):
 
         # Address we will have to build an complete address so that restaurant instance won't be overlapped
         # We will make the full address is restaurant identifier
-        full_address_col = [
-            "name",
-            "address",
-            "city",
-            "state",
-            "postcode",
-            "country"
-        ]
+        full_address_col = ["name", "address", "city", "state", "postcode", "country"]
         self.data["restaurant_identifier"] = self.data[full_address_col].apply(
             lambda row: " ".join(row.values.astype(str)), axis=1
         )
@@ -201,7 +199,7 @@ class PizzaKG(object):
             lambda x: self.generate_type_triple(
                 entity=x,
                 class_type=self.name_space.Restaurant,
-                _enable_external_uri=False
+                _enable_external_uri=False,
             )
         )
         self.data.apply(
@@ -261,7 +259,10 @@ class PizzaKG(object):
         self.data.apply(
             lambda row: self.generate_object_triple(
                 subject=row["restaurant_identifier"],
-                predicates=[self.name_space.isLocatedInCountry, self.name_space.isLocatedIn],
+                predicates=[
+                    self.name_space.locatedInCountry,
+                    self.name_space.locatedIn,
+                ],
                 object=row["country"],
             ),
             axis=1,
@@ -269,7 +270,10 @@ class PizzaKG(object):
         self.data.apply(
             lambda row: self.generate_object_triple(
                 subject=row["restaurant_identifier"],
-                predicates=[self.name_space.isLocatedInState, self.name_space.isLocatedIn],
+                predicates=[
+                    self.name_space.locatedInState,
+                    self.name_space.locatedIn,
+                ],
                 object=row["state"],
             ),
             axis=1,
@@ -277,13 +281,87 @@ class PizzaKG(object):
         self.data.apply(
             lambda row: self.generate_object_triple(
                 subject=row["restaurant_identifier"],
-                predicates=[self.name_space.isLocatedInCity, self.name_space.isLocatedIn],
+                predicates=[
+                    self.name_space.locatedInCity,
+                    self.name_space.locatedIn,
+                ],
                 object=row["city"],
             ),
             axis=1,
         )
 
+        # Menu item
+        self.data["item_identifier"] = self.data[
+            ["menu item", "restaurant_identifier"]
+        ].apply(lambda row: " ".join(row.values.astype(str)), axis=1)
+        self.data["item_identifier"].apply(
+            lambda x: self.generate_type_triple(
+                entity=x,
+                class_type=self.name_space.MenuItem,
+                _enable_external_uri=False,
+            )
+        )
+        self.data.apply(
+            lambda row: self.generate_type_triple(
+                entity=row["item_identifier"],
+                class_type=URIRef(
+                    self.generate_uri(
+                        row["menu item"], _external_uri_score_threshold=0.7
+                    )
+                ),
+            ),
+            axis=1,
+        )
+        self.data.apply(
+            lambda row: self.generate_literal_triple(
+                entity=row["item_identifier"],
+                predicate=self.name_space.name,
+                literal=row["menu item"],
+                datatype=XSD.string,
+            ),
+            axis=1,
+        )
+        self.data.apply(
+            lambda row: self.generate_literal_triple(
+                entity=row["item_identifier"],
+                predicate=self.name_space.price,
+                literal=row["item value"],
+                datatype=XSD.float,
+            ),
+            axis=1,
+        )
+        self.data.apply(
+            lambda row: self.generate_literal_triple(
+                entity=row["item_identifier"],
+                predicate=self.name_space.item_currency,
+                literal=row["currency"],
+                datatype=XSD.string,
+            ),
+            axis=1,
+        )
+        self.data.apply(
+            lambda row: self.generate_literal_triple(
+                entity=row["item_identifier"],
+                predicate=self.name_space.item_description,
+                literal=row["item description"],
+                datatype=XSD.string,
+            ),
+            axis=1,
+        )
+        self.data.apply(
+            lambda row: self.generate_object_triple(
+                subject=row["item_identifier"],
+                predicates=[self.name_space.servedIn],
+                object=row["restaurant_identifier"],
+            ),
+            axis=1,
+        )
 
+        print(
+            "######### CONVERSION FINISHED IN: {} SECONDS #########".format(
+                time.time() - start_time
+            )
+        )
 
     ######### PREPROCESSINGS #########
     def bind_prefixes(self, prefixes):
