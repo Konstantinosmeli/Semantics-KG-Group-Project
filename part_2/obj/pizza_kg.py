@@ -20,7 +20,10 @@ DEFAULT_PREFIXES = [
     ("skos", "http://www.w3.org/2004/02/skos/core#"),
     ("xml", "http://www.w3.org/XML/1998/namespace"),
     ("xsd", "http://www.w3.org/2001/XMLSchema#"),
-    ("dbr", "http://dbpedia.org/resource/")
+    ("dbr", "http://dbpedia.org/resource/"),
+    ("dbo", "http://dbpedia.org/ontology/"),
+    ("wd", "http://www.wikidata.org/entity/"),
+    ("wdt", "http://www.wikidata.org/prop/direct/"),
 ]
 
 
@@ -97,14 +100,96 @@ class PizzaKG(object):
                 entity=row["country"],
                 predicate=self.name_space.name,
                 literal=row["country"],
-                datatype=XSD.string
+                datatype=XSD.string,
             ),
-            axis=1
+            axis=1,
         )
 
         # Currency
+        self.data["currency"].apply(
+            lambda x: self.generate_type_triple(
+                entity=x,
+                class_type=self.name_space.Currency,
+                _external_uri_score_threshold=0.8,
+            )
+        )
 
+        self.data.apply(
+            lambda row: self.generate_literal_triple(
+                entity=row["currency"],
+                predicate=self.name_space.name,
+                literal=row["currency"],
+                datatype=XSD.string,
+            ),
+            axis=1,
+        )
 
+        self.data.apply(
+            lambda row: self.generate_object_triple(
+                subject=row["currency"],
+                predicate=self.name_space.isCurrencyOf,
+                object=row["country"],
+            ),
+            axis=1,
+        )
+
+        # State
+        self.data["state"].apply(
+            lambda x: self.generate_type_triple(
+                entity=x,
+                class_type=self.name_space.State,
+                _category_filter="http://dbpedia.org/resource/Category:States_of_the_United_States",
+                _external_uri_score_threshold=0.8,
+            )
+        )
+
+        self.data.apply(
+            lambda row: self.generate_literal_triple(
+                entity=row["state"],
+                predicate=self.name_space.name,
+                literal=row["state"],
+                datatype=XSD.string,
+            ),
+            axis=1,
+        )
+
+        self.data.apply(
+            lambda row: self.generate_object_triple(
+                subject=row["state"],
+                predicate=self.name_space.isStateOf,
+                object=row["country"],
+            ),
+            axis=1,
+        )
+
+        # City
+        self.data["city"].apply(
+            lambda x: self.generate_type_triple(
+                entity=x,
+                class_type=self.name_space.City,
+                _category_filter="http://dbpedia.org/resource/Category:Cities_in_the_United_States",
+                _external_uri_score_threshold=0.7,
+            )
+        )
+
+        self.data.apply(
+            lambda row: self.generate_literal_triple(
+                entity=row["city"],
+                predicate=self.name_space.name,
+                literal=row["city"],
+                datatype=XSD.string,
+            ),
+            axis=1,
+        )
+
+        self.data.apply(
+            lambda row: self.generate_object_triple(
+                subject=row["city"],
+                predicate=self.name_space.isCityOf,
+                object=row["state"],
+            ),
+            axis=1,
+        )
 
     ######### PREPROCESSINGS #########
     def bind_prefixes(self, prefixes):
@@ -207,6 +292,7 @@ class PizzaKG(object):
         entity: str,
         _enable_external_uri: bool = enable_external_uri,
         _category_filter: str = "",
+        _external_uri_score_threshold: float = external_uri_score_threshold,
     ):
         """
         We will generate URI for the entity, note that there are some logic:
@@ -226,7 +312,7 @@ class PizzaKG(object):
                 _query=entity,
                 _category_filter=_category_filter,
             )
-            if (_uri != "") & (_score > self.external_uri_score_threshold):
+            if (_uri != "") & (_score > _external_uri_score_threshold):
                 uri = _uri
 
         self.entity_uri_dict[entity.lower()] = uri
@@ -284,6 +370,7 @@ class PizzaKG(object):
         class_type: str,
         _enable_external_uri: bool = enable_external_uri,
         _category_filter: str = "",
+        _external_uri_score_threshold: float = external_uri_score_threshold,
     ):
         """
         Generate type triple: Example: ns:London rdf:type ns:City
@@ -305,6 +392,7 @@ class PizzaKG(object):
                 entity=entity,
                 _enable_external_uri=_enable_external_uri,
                 _category_filter=_category_filter,
+                _external_uri_score_threshold=_external_uri_score_threshold,
             )
 
         # Add type triple
@@ -323,7 +411,7 @@ class PizzaKG(object):
         """
         # If the literal is blank or empty, we will pass it
         if self.is_missing(literal):
-            pass
+            return
 
         # Get the URI from dictionary
         uri = self.entity_uri_dict[entity.lower()]
@@ -333,6 +421,24 @@ class PizzaKG(object):
 
         # Add literal to graph
         self.graph.add((URIRef(uri), predicate, _literal))
+
+    def generate_object_triple(self, subject: str, predicate: str, object: str):
+        """
+        Generate literal triple: Example: ns:USD ns:isCurrencyOf ns:US
+        :param subject:
+        :param predicate:
+        :param object:
+        :return:
+        """
+        # If the literal is blank or empty, we will pass it
+        if self.is_missing(subject) or self.is_missing(object):
+            return
+
+        # Get the URI from dictionary
+        subject_uri = self.entity_uri_dict[subject.lower()]
+        object_uri = self.entity_uri_dict[object.lower()]
+
+        self.graph.add((URIRef(subject_uri), predicate, URIRef(object_uri)))
 
     ######### SAVE GRAPH #########
     def save_graph(self, output_file: str, _format: str = "ttl"):
@@ -351,4 +457,10 @@ class PizzaKG(object):
         :param value:
         :return:
         """
-        return (value != value) or (value is None) or (value == "") or (value == np.nan)
+        return (
+            (value != value)
+            or (value is None)
+            or (value == "")
+            or (value == " ")
+            or (value == np.nan)
+        )
