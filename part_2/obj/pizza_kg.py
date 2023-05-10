@@ -49,7 +49,7 @@ class PizzaKG(object):
         self.file_path = _file_path
         self.data = pd.read_csv(
             self.file_path, delimiter=",", quotechar='"', escapechar="\\"
-        )
+        ).head(15) # TODO remove head
 
         # Initialise the graph
         self.graph = Graph()
@@ -94,7 +94,6 @@ class PizzaKG(object):
                 _category_filter="http://dbpedia.org/resource/Category:Lists_of_countries",
             )
         )
-
         self.data.apply(
             lambda row: self.generate_literal_triple(
                 entity=row["country"],
@@ -113,7 +112,6 @@ class PizzaKG(object):
                 _external_uri_score_threshold=0.8,
             )
         )
-
         self.data.apply(
             lambda row: self.generate_literal_triple(
                 entity=row["currency"],
@@ -123,11 +121,10 @@ class PizzaKG(object):
             ),
             axis=1,
         )
-
         self.data.apply(
             lambda row: self.generate_object_triple(
                 subject=row["currency"],
-                predicate=self.name_space.isCurrencyOf,
+                predicates=[self.name_space.isCurrencyOf],
                 object=row["country"],
             ),
             axis=1,
@@ -142,7 +139,6 @@ class PizzaKG(object):
                 _external_uri_score_threshold=0.8,
             )
         )
-
         self.data.apply(
             lambda row: self.generate_literal_triple(
                 entity=row["state"],
@@ -152,11 +148,10 @@ class PizzaKG(object):
             ),
             axis=1,
         )
-
         self.data.apply(
             lambda row: self.generate_object_triple(
                 subject=row["state"],
-                predicate=self.name_space.isStateOf,
+                predicates=[self.name_space.isStateOf, self.name_space.isLocatedIn],
                 object=row["country"],
             ),
             axis=1,
@@ -171,7 +166,6 @@ class PizzaKG(object):
                 _external_uri_score_threshold=0.7,
             )
         )
-
         self.data.apply(
             lambda row: self.generate_literal_triple(
                 entity=row["city"],
@@ -181,15 +175,115 @@ class PizzaKG(object):
             ),
             axis=1,
         )
-
         self.data.apply(
             lambda row: self.generate_object_triple(
                 subject=row["city"],
-                predicate=self.name_space.isCityOf,
+                predicates=[self.name_space.isCityOf, self.name_space.isLocatedIn],
                 object=row["state"],
             ),
             axis=1,
         )
+
+        # Address we will have to build an complete address so that restaurant instance won't be overlapped
+        # We will make the full address is restaurant identifier
+        full_address_col = [
+            "name",
+            "address",
+            "city",
+            "state",
+            "postcode",
+            "country"
+        ]
+        self.data["restaurant_identifier"] = self.data[full_address_col].apply(
+            lambda row: " ".join(row.values.astype(str)), axis=1
+        )
+        self.data["restaurant_identifier"].apply(
+            lambda x: self.generate_type_triple(
+                entity=x,
+                class_type=self.name_space.Restaurant,
+                _enable_external_uri=False
+            )
+        )
+        self.data.apply(
+            lambda row: self.generate_literal_triple(
+                entity=row["restaurant_identifier"],
+                predicate=self.name_space.name,
+                literal=row["name"],
+                datatype=XSD.string,
+            ),
+            axis=1,
+        )
+        self.data.apply(
+            lambda row: self.generate_literal_triple(
+                entity=row["restaurant_identifier"],
+                predicate=self.name_space.address,
+                literal=row["address"],
+                datatype=XSD.string,
+            ),
+            axis=1,
+        )
+        self.data.apply(
+            lambda row: self.generate_literal_triple(
+                entity=row["restaurant_identifier"],
+                predicate=self.name_space.city,
+                literal=row["city"],
+                datatype=XSD.string,
+            ),
+            axis=1,
+        )
+        self.data.apply(
+            lambda row: self.generate_literal_triple(
+                entity=row["restaurant_identifier"],
+                predicate=self.name_space.state,
+                literal=row["state"],
+                datatype=XSD.string,
+            ),
+            axis=1,
+        )
+        self.data.apply(
+            lambda row: self.generate_literal_triple(
+                entity=row["restaurant_identifier"],
+                predicate=self.name_space.postcode,
+                literal=str(row["postcode"]),
+                datatype=XSD.string,
+            ),
+            axis=1,
+        )
+        self.data.apply(
+            lambda row: self.generate_literal_triple(
+                entity=row["restaurant_identifier"],
+                predicate=self.name_space.country,
+                literal=row["country"],
+                datatype=XSD.string,
+            ),
+            axis=1,
+        )
+        self.data.apply(
+            lambda row: self.generate_object_triple(
+                subject=row["restaurant_identifier"],
+                predicates=[self.name_space.isLocatedInCountry, self.name_space.isLocatedIn],
+                object=row["country"],
+            ),
+            axis=1,
+        )
+        self.data.apply(
+            lambda row: self.generate_object_triple(
+                subject=row["restaurant_identifier"],
+                predicates=[self.name_space.isLocatedInState, self.name_space.isLocatedIn],
+                object=row["state"],
+            ),
+            axis=1,
+        )
+        self.data.apply(
+            lambda row: self.generate_object_triple(
+                subject=row["restaurant_identifier"],
+                predicates=[self.name_space.isLocatedInCity, self.name_space.isLocatedIn],
+                object=row["city"],
+            ),
+            axis=1,
+        )
+
+
 
     ######### PREPROCESSINGS #########
     def bind_prefixes(self, prefixes):
@@ -223,11 +317,11 @@ class PizzaKG(object):
 
         # List all character is not alphanumeric and and white space
         non_alphanumeric_chars = [
-            e for e in chars if (not e.isalnum()) & (e not in [" ", "'", ","])
+            e for e in chars if (not e.isalnum()) & (e not in [" ", "'", ",", "-"])
         ]
 
         # Dictionary to replace meaningful non-alphanumeric characters
-        meaningful_non_alphanumeric = {"@": "at", "&": "and", "+": "with"}
+        meaningful_non_alphanumeric = {"@": "at", "&": "and", "+": "with", "-": "_"}
 
         # Remove meaningful non-alphanumeric characters from the list
         # Since we will not remove them, but replace them
@@ -422,7 +516,7 @@ class PizzaKG(object):
         # Add literal to graph
         self.graph.add((URIRef(uri), predicate, _literal))
 
-    def generate_object_triple(self, subject: str, predicate: str, object: str):
+    def generate_object_triple(self, subject: str, predicates: [str], object: str):
         """
         Generate literal triple: Example: ns:USD ns:isCurrencyOf ns:US
         :param subject:
@@ -438,7 +532,8 @@ class PizzaKG(object):
         subject_uri = self.entity_uri_dict[subject.lower()]
         object_uri = self.entity_uri_dict[object.lower()]
 
-        self.graph.add((URIRef(subject_uri), predicate, URIRef(object_uri)))
+        for predicate in predicates:
+            self.graph.add((URIRef(subject_uri), predicate, URIRef(object_uri)))
 
     ######### SAVE GRAPH #########
     def save_graph(self, output_file: str, _format: str = "ttl"):
