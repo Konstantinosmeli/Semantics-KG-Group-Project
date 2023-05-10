@@ -11,3 +11,6 @@ if __name__ == '__main__':
     pizza_kg = PizzaKG(_file_path=FILE_PATH,
                        _name_space_str=NAMESPACE_STR,
                        _name_space_prefix=NAMESPACE_PREFIX)
+
+    pizza_kg.convert_csv_to_rdf()
+    pizza_kg.save_graph("test1.ttl")
