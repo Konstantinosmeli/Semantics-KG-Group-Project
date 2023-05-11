@@ -230,19 +230,19 @@ class PizzaKG(object):
         self.data["categories"].apply(
             lambda row: [
                 self.generate_subclass_triple(
-                    child=x.replace(" ", ""),
+                    child=x.replace(" ", "").rstrip("s"),
                     parent="Restaurant",
                     _enable_external_uri=False,
                 )
                 for x in row.split(",")
-                if x != "Restaurant"
+                if x not in ["Restaurant", "Pizza", "Location"]
             ]
         )
         self.data.apply(
             lambda row: [
                 self.generate_type_triple(
                     entity=row["restaurant_id"],
-                    class_type=self.name_space[x.replace(" ", "")],
+                    class_type=self.name_space[x.replace(" ", "").rstrip("s")],
                     _enable_external_uri=False,
                 )
                 for x in row["categories"].split(",")
@@ -314,11 +314,118 @@ class PizzaKG(object):
             axis=1,
         )
 
+        # Pizza & Ingredient
+        self.generate_subclass_triple(parent="Food", child="Ingredient")
+        self.generate_subclass_triple(parent="Food", child="Pizza")
+        self.data["item_id"] = self.data[["menu item", "restaurant_id"]].apply(
+            lambda row: "_".join(row.astype(str)).replace(" ", "_"), axis=1
+        )
+        self.data["menu item"].apply(
+            lambda x: self.generate_subclass_triple(
+                child=x.replace(" ", "").rstrip("s"),
+                parent="Pizza",
+                _external_uri_score_threshold=0.8,
+            )
+        )
+        self.data.apply(
+            lambda row: self.generate_type_triple(
+                entity=row["item_id"],
+                class_type=self.name_space[
+                    row["menu item"].replace(" ", "").rstrip("s")
+                ],
+                _enable_external_uri=False,
+            ),
+            axis=1,
+        )
+        self.data.apply(
+            lambda row: self.generate_literal_triple(
+                entity=row["item_id"],
+                predicate=self.name_space.itemName,
+                literal=row["menu item"],
+                datatype=XSD.string,
+            ),
+            axis=1,
+        )
+        self.data.apply(
+            lambda row: self.generate_object_triple(
+                subject=row["item_id"],
+                predicates=[self.name_space.servedInRestaurant],
+                object=row["restaurant_id"],
+            ),
+            axis=1,
+        )
+        self.data.apply(
+            lambda row: self.generate_object_triple(
+                subject=row["item_id"],
+                predicates=[self.name_space.hasValue],
+                object=row["item_value_id"],
+            ),
+            axis=1,
+        )
+        self.data.apply(
+            lambda row: self.generate_ingredient_list(
+                row,
+                _category_filter="https://dbpedia.org/page/Category:Food_ingredients",
+                _external_uri_score_threshold=0.65,
+            ),
+            axis=1,
+        )
+
         print(
             "######### CONVERSION FINISHED IN: {} SECONDS #########".format(
                 time.time() - start_time
             )
         )
+
+
+    def generate_ingredient_list(
+        self,
+        row,
+        _enable_external_uri: bool = enable_external_uri,
+        _category_filter: str = "",
+        _external_uri_score_threshold: float = external_uri_score_threshold,
+    ):
+        """
+        Since the data is noisy which description and ingredient mixed, therefore, use external KG with category search to classify what is description and what is ingredient.
+        In the case that we turn off public KG, everything in column description will be description literal triple.
+        :param row:
+        :param _enable_external_uri:
+        :param _category_filter:
+        :param _external_uri_score_threshold:
+        :return:
+        """
+        elements = [x.strip().rstrip("s").replace(" ", "_") for x in row["item description"].split(",")]
+        for element in elements:
+            if _enable_external_uri:
+                _uri, _score = self.generate_external_uri(
+                    _query=element, _category_filter=_category_filter
+                )
+                if _score >= _external_uri_score_threshold:
+                    row["ingredient_id"] = element + "_" + row["item_id"]
+                    child_uri, parent_uri = self.generate_subclass_triple(
+                        parent="Ingredient",
+                        child=element,
+                        _enable_external_uri=_enable_external_uri,
+                        _external_uri_score_threshold=_external_uri_score_threshold,
+                        _child_category_filter=_category_filter
+                    )
+                    self.generate_type_triple(
+                        entity=row["ingredient_id"],
+                        class_type=child_uri,
+                        _enable_external_uri=False
+                    )
+                    self.generate_object_triple(
+                        subject=row["ingredient_id"],
+                        predicates=[self.name_space.isIngredientOf],
+                        object=row["item_id"],
+                    )
+                else:
+                    self.generate_literal_triple(
+                        entity=row["item_id"],
+                        predicate=self.name_space.description,
+                        literal=element,
+                        datatype=XSD.string
+                    )
 
     ######### PREPROCESSINGS #########
     def bind_prefixes(self, prefixes):
@@ -448,7 +555,7 @@ class PizzaKG(object):
                 _query=entity,
                 _category_filter=_category_filter,
             )
-            if (_uri != "") & (_score > _external_uri_score_threshold):
+            if (_uri != "") & (_score >= _external_uri_score_threshold):
                 uri = _uri
 
         self.entity_uri_dict[entity.lower()] = uri
@@ -618,20 +725,26 @@ class PizzaKG(object):
 
         self.graph.add((URIRef(child_uri), RDFS.subClassOf, URIRef(parent_uri)))
 
+        return URIRef(child_uri), URIRef(parent_uri)
+
     ######### REASONING #########
     def perform_reasoning(self, ontology: str):
+        """
+        Perform reasoning with existing ontology
+        :param ontology:
+        :return:
+        """
         # Load the ontology file
         self.graph.load(ontology, format=guess_format(ontology))
 
-        # print("Triples including ontology: '" + str(len(self.graph) + "'."))
-
+        # Load and expand reasoner
         owlrl.DeductiveClosure(
             owlrl.OWLRL.OWLRL_Semantics,
             axiomatic_triples=False,
             datatype_axioms=False,
         ).expand(self.graph)
 
-        print("Triples after OWL 2 RL reasoning: '" + str(len(self.graph)) + "'.")
+        print("Done reasoning, triples count: '" + str(len(self.graph)) + "'.")
 
     ######### SAVE GRAPH #########
     def save_graph(self, output_file: str, _format: str = "ttl"):
@@ -656,4 +769,5 @@ class PizzaKG(object):
             or (value == "")
             or (value == " ")
             or (value == np.nan)
+            or (value == "_")
         )
