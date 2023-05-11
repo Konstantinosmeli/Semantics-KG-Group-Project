@@ -14,7 +14,6 @@ class KG(Enum):
 
 
 class URI_KG(object):
-
     dbpedia_uri_resource = "http://dbpedia.org/resource/"
 
     dbpedia_uri_property = "http://dbpedia.org/property/"
@@ -77,12 +76,11 @@ class URI_KG(object):
     )  # natural physical object
 
     def __init__(self):
-        """ ' """
+        """'"""
 
 
 class KGEntity(object):
     def __init__(self, enity_id, label, description, types, source):
-
         self.ident = enity_id
         self.label = label
         self.desc = description  # sometimes provides a very concrete type or additional semantics

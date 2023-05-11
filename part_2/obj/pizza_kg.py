@@ -6,7 +6,7 @@ import time
 
 import pandas as pd
 import numpy as np
-from rdflib import Graph, Namespace, URIRef, Literal
+from rdflib import Graph, Namespace, URIRef, Literal, RDFS
 from rdflib.namespace import RDF, XSD
 from rdflib.util import guess_format
 import owlrl
@@ -36,7 +36,7 @@ class PizzaKG(object):
     name_space_str: str
     prefix: str
     entity_uri_dict: dict = {}
-    enable_external_uri: bool = False
+    enable_external_uri: bool = True
     external_uri_score_threshold = 0.4
 
     def __init__(
@@ -51,7 +51,11 @@ class PizzaKG(object):
         # Setup input file as data
         self.file_path = _file_path
         self.data = pd.read_csv(
-            self.file_path, delimiter=",", quotechar='"', escapechar="\\"
+            self.file_path,
+            delimiter=",",
+            quotechar='"',
+            escapechar="\\",
+            dtype={"postcode": str},
         )
 
         # Initialise the graph
@@ -93,6 +97,7 @@ class PizzaKG(object):
         print("######### STARTING CONVERSION #########")
 
         # Country
+        self.generate_subclass_triple(parent="Location", child="Country")
         self.data["country"].apply(
             lambda x: self.generate_type_triple(
                 entity=x,
@@ -106,6 +111,157 @@ class PizzaKG(object):
                 entity=row["country"],
                 predicate=self.name_space.name,
                 literal=row["country"],
+                datatype=XSD.string,
+            ),
+            axis=1,
+        )
+
+        # State
+        self.generate_subclass_triple(parent="Location", child="State")
+        self.data["state"].apply(
+            lambda x: self.generate_type_triple(
+                entity=x,
+                class_type=self.name_space.State,
+                _category_filter="http://dbpedia.org/resource/Category:States_of_the_United_States",
+                _external_uri_score_threshold=0.8,
+            )
+        )
+        self.data.apply(
+            lambda row: self.generate_literal_triple(
+                entity=row["state"],
+                predicate=self.name_space.name,
+                literal=row["state"],
+                datatype=XSD.string,
+            ),
+            axis=1,
+        )
+        self.data.apply(
+            lambda row: self.generate_object_triple(
+                subject=row["state"],
+                predicates=[
+                    self.name_space.isStateOf,
+                    self.name_space.locatedIn,
+                    self.name_space.locatedInCountry,
+                ],
+                object=row["country"],
+            ),
+            axis=1,
+        )
+
+        # City
+        self.generate_subclass_triple(parent="Location", child="City")
+        self.data["city"].apply(
+            lambda x: self.generate_type_triple(
+                entity=x,
+                class_type=self.name_space.City,
+                _category_filter="http://dbpedia.org/resource/Category:Cities_in_the_United_States",
+                _external_uri_score_threshold=0.7,
+            )
+        )
+        self.data.apply(
+            lambda row: self.generate_literal_triple(
+                entity=row["city"],
+                predicate=self.name_space.name,
+                literal=row["city"],
+                datatype=XSD.string,
+            ),
+            axis=1,
+        )
+        self.data.apply(
+            lambda row: self.generate_object_triple(
+                subject=row["city"],
+                predicates=[self.name_space.locatedInState, self.name_space.locatedIn],
+                object=row["state"],
+            ),
+            axis=1,
+        )
+        self.data.apply(
+            lambda row: self.generate_object_triple(
+                subject=row["city"],
+                predicates=[self.name_space.locatedCountry, self.name_space.locatedIn],
+                object=row["country"],
+            ),
+            axis=1,
+        )
+
+        # Address
+        # We will have to concat a few field to make address identifier
+        self.data["address_id"] = self.data[["address", "city", "state"]].apply(
+            lambda row: "_".join(row.astype(str)).replace(" ", "_"), axis=1
+        )
+        self.generate_subclass_triple(parent="Location", child="Address")
+        self.data["address_id"].apply(
+            lambda x: self.generate_type_triple(
+                entity=x, class_type=self.name_space.Address, _enable_external_uri=False
+            )
+        )
+        self.data.apply(
+            lambda row: self.generate_literal_triple(
+                entity=row["address_id"],
+                predicate=self.name_space.firstLineAddress,
+                literal=row["address"],
+                datatype=XSD.string,
+            ),
+            axis=1,
+        )
+        self.data.apply(
+            lambda row: self.generate_literal_triple(
+                entity=row["address_id"],
+                predicate=self.name_space.postCode,
+                literal=row["postcode"],
+                datatype=XSD.string,
+            ),
+            axis=1,
+        )
+        self.data.apply(
+            lambda row: self.generate_object_triple(
+                subject=row["address_id"],
+                predicates=[self.name_space.locatedCity, self.name_space.locatedIn],
+                object=row["city"],
+            ),
+            axis=1,
+        )
+
+        # Restaurant
+        self.data["restaurant_id"] = self.data[["name", "address_id"]].apply(
+            lambda row: "_".join(row.astype(str)).replace(" ", "_"), axis=1
+        )
+        self.generate_subclass_triple(parent="Location", child="Restaurant")
+        self.data["categories"].apply(
+            lambda row: [
+                self.generate_subclass_triple(
+                    child=x.replace(" ", ""),
+                    parent="Restaurant",
+                    _enable_external_uri=False,
+                )
+                for x in row.split(",")
+                if x != "Restaurant"
+            ]
+        )
+        self.data.apply(
+            lambda row: [
+                self.generate_type_triple(
+                    entity=row["restaurant_id"],
+                    class_type=self.name_space[x.replace(" ", "")],
+                    _enable_external_uri=False,
+                )
+                for x in row["categories"].split(",")
+            ],
+            axis=1,
+        )
+        self.data.apply(
+            lambda row: self.generate_object_triple(
+                subject=row["restaurant_id"],
+                predicates=[self.name_space.locatedAddress, self.name_space.locatedIn],
+                object=row["address_id"],
+            ),
+            axis=1,
+        )
+        self.data.apply(
+            lambda row: self.generate_literal_triple(
+                entity=row["restaurant_id"],
+                predicate=self.name_space.name,
+                literal=row["name"],
                 datatype=XSD.string,
             ),
             axis=1,
@@ -128,224 +284,12 @@ class PizzaKG(object):
             ),
             axis=1,
         )
-        self.data.apply(
-            lambda row: self.generate_object_triple(
-                subject=row["currency"],
-                predicates=[self.name_space.isCurrencyOf],
-                object=row["country"],
-            ),
-            axis=1,
-        )
 
-        # State
-        self.data["state"].apply(
-            lambda x: self.generate_type_triple(
-                entity=x,
-                class_type=self.name_space.State,
-                _category_filter="http://dbpedia.org/resource/Category:States_of_the_United_States",
-                _external_uri_score_threshold=0.8,
-            )
+        # Item value
+        self.data["item_value_id"] = (
+            self.data["item value"].astype(str) + self.data["currency"]
         )
-        self.data.apply(
-            lambda row: self.generate_literal_triple(
-                entity=row["state"],
-                predicate=self.name_space.name,
-                literal=row["state"],
-                datatype=XSD.string,
-            ),
-            axis=1,
-        )
-        self.data.apply(
-            lambda row: self.generate_object_triple(
-                subject=row["state"],
-                predicates=[self.name_space.isStateOf, self.name_space.locatedIn],
-                object=row["country"],
-            ),
-            axis=1,
-        )
-
-        # City
-        self.data["city"].apply(
-            lambda x: self.generate_type_triple(
-                entity=x,
-                class_type=self.name_space.City,
-                _category_filter="http://dbpedia.org/resource/Category:Cities_in_the_United_States",
-                _external_uri_score_threshold=0.7,
-            )
-        )
-        self.data.apply(
-            lambda row: self.generate_literal_triple(
-                entity=row["city"],
-                predicate=self.name_space.name,
-                literal=row["city"],
-                datatype=XSD.string,
-            ),
-            axis=1,
-        )
-        self.data.apply(
-            lambda row: self.generate_object_triple(
-                subject=row["city"],
-                predicates=[self.name_space.isCityOf, self.name_space.locatedIn],
-                object=row["state"],
-            ),
-            axis=1,
-        )
-
-        # Address we will have to build an complete address so that restaurant instance won't be overlapped
-        # We will make the full address is restaurant identifier
-        full_address_col = ["name", "address", "city", "state", "postcode", "country"]
-        self.data["restaurant_identifier"] = self.data[full_address_col].apply(
-            lambda row: " ".join(row.values.astype(str)), axis=1
-        )
-        self.data["restaurant_identifier"].apply(
-            lambda x: self.generate_type_triple(
-                entity=x,
-                class_type=self.name_space.Restaurant,
-                _enable_external_uri=False,
-            )
-        )
-        self.data.apply(
-            lambda row: self.generate_literal_triple(
-                entity=row["restaurant_identifier"],
-                predicate=self.name_space.name,
-                literal=row["name"],
-                datatype=XSD.string,
-            ),
-            axis=1,
-        )
-        self.data.apply(
-            lambda row: self.generate_literal_triple(
-                entity=row["restaurant_identifier"],
-                predicate=self.name_space.firstLineAddress,
-                literal=row["address"],
-                datatype=XSD.string,
-            ),
-            axis=1,
-        )
-        self.data.apply(
-            lambda row: self.generate_literal_triple(
-                entity=row["restaurant_identifier"],
-                predicate=self.name_space.city,
-                literal=row["city"],
-                datatype=XSD.string,
-            ),
-            axis=1,
-        )
-        self.data.apply(
-            lambda row: self.generate_literal_triple(
-                entity=row["restaurant_identifier"],
-                predicate=self.name_space.state,
-                literal=row["state"],
-                datatype=XSD.string,
-            ),
-            axis=1,
-        )
-        self.data.apply(
-            lambda row: self.generate_literal_triple(
-                entity=row["restaurant_identifier"],
-                predicate=self.name_space.postCode,
-                literal=str(row["postcode"]),
-                datatype=XSD.string,
-            ),
-            axis=1,
-        )
-        self.data.apply(
-            lambda row: self.generate_literal_triple(
-                entity=row["restaurant_identifier"],
-                predicate=self.name_space.country,
-                literal=row["country"],
-                datatype=XSD.string,
-            ),
-            axis=1,
-        )
-        self.data.apply(
-            lambda row: self.generate_object_triple(
-                subject=row["restaurant_identifier"],
-                predicates=[
-                    self.name_space.locatedInCountry,
-                    self.name_space.locatedIn,
-                ],
-                object=row["country"],
-            ),
-            axis=1,
-        )
-        self.data.apply(
-            lambda row: self.generate_object_triple(
-                subject=row["restaurant_identifier"],
-                predicates=[
-                    self.name_space.locatedInState,
-                    self.name_space.locatedIn,
-                ],
-                object=row["state"],
-            ),
-            axis=1,
-        )
-        self.data.apply(
-            lambda row: self.generate_object_triple(
-                subject=row["restaurant_identifier"],
-                predicates=[
-                    self.name_space.locatedInCity,
-                    self.name_space.locatedIn,
-                ],
-                object=row["city"],
-            ),
-            axis=1,
-        )
-
-        # Menu itemm since all data is Pizza, we will set them directly as pizza
-        self.data["item_identifier"] = self.data[
-            ["menu item", "restaurant_identifier"]
-        ].apply(lambda row: " ".join(row.values.astype(str)), axis=1)
-        self.data["item_identifier"].apply(
-            lambda x: self.generate_type_triple(
-                entity=x,
-                class_type=self.name_space.Pizza,
-                _enable_external_uri=False,
-            )
-        )
-        self.data.apply(
-            lambda row: self.generate_type_triple(
-                entity=row["item_identifier"],
-                class_type=URIRef(
-                    self.generate_uri(
-                        row["menu item"], _external_uri_score_threshold=0.7
-                    )
-                ),
-            ),
-            axis=1,
-        )
-        self.data.apply(
-            lambda row: self.generate_literal_triple(
-                entity=row["item_identifier"],
-                predicate=self.name_space.name,
-                literal=row["menu item"],
-                datatype=XSD.string,
-            ),
-            axis=1,
-        )
-        self.data.apply(
-            lambda row: self.generate_literal_triple(
-                entity=row["item_identifier"],
-                predicate=self.name_space.item_description,
-                literal=row["item description"],
-                datatype=XSD.string,
-            ),
-            axis=1,
-        )
-        self.data.apply(
-            lambda row: self.generate_object_triple(
-                subject=row["item_identifier"],
-                predicates=[self.name_space.servedIn],
-                object=row["restaurant_identifier"],
-            ),
-            axis=1,
-        )
-
-        # Price
-        self.data["price"] = self.data[
-            ["item value", "currency"]
-        ].apply(lambda row: " ".join(row.values.astype(str)), axis=1)
-        self.data["price"].apply(
+        self.data["item_value_id"].apply(
             lambda x: self.generate_type_triple(
                 entity=x,
                 class_type=self.name_space.ItemValue,
@@ -353,28 +297,19 @@ class PizzaKG(object):
             )
         )
         self.data.apply(
-            lambda row: self.generate_literal_triple(
-                entity=row["item_identifier"],
-                predicate=self.name_space.hasValue,
-                literal=row["price"],
-                datatype=XSD.string,
+            lambda row: self.generate_object_triple(
+                subject=row["item_value_id"],
+                predicates=[self.name_space.amountCurrency],
+                object=row["currency"],
             ),
             axis=1,
         )
         self.data.apply(
             lambda row: self.generate_literal_triple(
-                entity=row["price"],
+                entity=row["item_value_id"],
                 predicate=self.name_space.amount,
                 literal=row["item value"],
                 datatype=XSD.double,
-            ),
-            axis=1,
-        )
-        self.data.apply(
-            lambda row: self.generate_object_triple(
-                subject=row["price"],
-                predicates=[self.name_space.amountCurrency],
-                object=row["currency"],
             ),
             axis=1,
         )
@@ -421,7 +356,13 @@ class PizzaKG(object):
         ]
 
         # Dictionary to replace meaningful non-alphanumeric characters
-        meaningful_non_alphanumeric = {"@": "at", "&": "and", "+": "with", "-": "_"}
+        meaningful_non_alphanumeric = {
+            "@": "at",
+            "&": "and",
+            "+": "with",
+            "-": "_",
+            "'": "_",
+        }
 
         # Remove meaningful non-alphanumeric characters from the list
         # Since we will not remove them, but replace them
@@ -432,7 +373,8 @@ class PizzaKG(object):
         ]
 
         # Replace all meaningful non-alphanumeric characters
-        self.data.replace({column: meaningful_non_alphanumeric}, inplace=True)
+        for x, y in meaningful_non_alphanumeric.items():
+            self.data[column] = self.data[column].str.replace(x, y, regex=False)
 
         # Remove all non-meaningful non-alphanumeric char
         for e in non_alphanumeric_chars:
@@ -531,7 +473,7 @@ class PizzaKG(object):
         dbpedia_result = self.dbpedia.getKGEntities(
             query=_query, limit=_limit, category_filter=_category_filter
         )
-        wikidata_result = self.wikidata.getKGEntities(query=_query, limit=_limit)
+        # wikidata_result = self.wikidata.getKGEntities(query=_query, limit=_limit)
 
         # Mute wikidata if we specify search category inside DBpedia
         if re.search(r"dbpedia\.org", _category_filter):
@@ -540,7 +482,7 @@ class PizzaKG(object):
         # Concentrate the result and then return
         entities = [
             *dbpedia_result,
-            *wikidata_result,
+            #        *wikidata_result,
         ]
 
         # Parameters for comparation
@@ -634,6 +576,47 @@ class PizzaKG(object):
 
         for predicate in predicates:
             self.graph.add((URIRef(subject_uri), predicate, URIRef(object_uri)))
+
+    def generate_subclass_triple(
+        self,
+        parent: str,
+        child: str,
+        _enable_external_uri: bool = False,
+        _external_uri_score_threshold: float = external_uri_score_threshold,
+        _parent_category_filter: str = "",
+        _child_category_filter: str = "",
+    ):
+        """
+        Generate literal triple: Example: ns:AmericanRestaurant rdfs:isSubClassOf ns:Restaurant
+        :param parent:
+        :param child:
+        :return:
+        """
+        if self.is_missing(parent) or self.is_missing(child):
+            return
+
+            # Check if item exist in dictionary so that we don't have to call API again
+        if parent.lower() in self.entity_uri_dict:
+            parent_uri = self.entity_uri_dict[parent.lower()]
+        else:
+            parent_uri = self.generate_uri(
+                entity=parent,
+                _enable_external_uri=_enable_external_uri,
+                _category_filter=_parent_category_filter,
+                _external_uri_score_threshold=_external_uri_score_threshold,
+            )
+
+        if child.lower() in self.entity_uri_dict:
+            child_uri = self.entity_uri_dict[child.lower()]
+        else:
+            child_uri = self.generate_uri(
+                entity=child,
+                _enable_external_uri=_enable_external_uri,
+                _category_filter=_child_category_filter,
+                _external_uri_score_threshold=_external_uri_score_threshold,
+            )
+
+        self.graph.add((URIRef(child_uri), RDFS.subClassOf, URIRef(parent_uri)))
 
     ######### REASONING #########
     def perform_reasoning(self, ontology: str):
