@@ -1,10 +1,11 @@
 from obj.pizza_kg import PizzaKG
-import numpy as np
+
 
 # Constrains and settings
 FILE_PATH = "./cw_data/IN3067-INM713_coursework_data_pizza_500.csv"
 NAMESPACE_STR = "http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#"
 NAMESPACE_PREFIX = "cw"
+ONTOLOGY = "./pizza-restaurants-model-ontology/pizza-restaurants-ontology.ttl"
 
 
 if __name__ == '__main__':
@@ -13,4 +14,6 @@ if __name__ == '__main__':
                        _name_space_prefix=NAMESPACE_PREFIX)
 
     pizza_kg.convert_csv_to_rdf()
-    pizza_kg.save_graph("test1.ttl")
+    pizza_kg.save_graph("pizza_restaurant_csv_rdf.ttl")
+    pizza_kg.perform_reasoning(ontology=ONTOLOGY)
+    pizza_kg.save_graph("pizza_restaurant_reasoned.ttl")

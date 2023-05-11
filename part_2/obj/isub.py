@@ -58,8 +58,7 @@ def isub(str1, str2):
     return ontolcs(str1, str2)
 
 
-def ontolcs(str1, str2, min_common_len=2, common_divisor='average',
-            min_threshold=None):
+def ontolcs(str1, str2, min_common_len=2, common_divisor="average", min_threshold=None):
     """Return approximate string comparator measure (between 0.0 and 1.0) using
        repeated longest common substring extractions, Hamacher difference and the
        Winkler heuristic.
@@ -86,14 +85,15 @@ def ontolcs(str1, str2, min_common_len=2, common_divisor='average',
 
     P = 0.6  # Constant for Hamacher product difference, see above mentioned paper
 
-    if (min_common_len < 1):
-        logging.exception('Minimum common length must be at least 1: %d' % \
-                          (min_common_len))
+    if min_common_len < 1:
+        logging.exception(
+            "Minimum common length must be at least 1: %d" % (min_common_len)
+        )
         raise Exception
 
-    if (str1 == '') or (str2 == ''):
+    if (str1 == "") or (str2 == ""):
         return 0.0
-    elif (str1 == str2):
+    elif str1 == str2:
         return 1.0
 
     len1 = len(str1)
@@ -101,14 +101,13 @@ def ontolcs(str1, str2, min_common_len=2, common_divisor='average',
 
     # Calculate the divisor - - - - - - - - - - - - - - - - - - - - - - - - - - -
     #
-    if (common_divisor not in ['average', 'shortest', 'longest']):
-        logging.exception('Illegal value for common divisor: %s' % \
-                          (common_divisor))
+    if common_divisor not in ["average", "shortest", "longest"]:
+        logging.exception("Illegal value for common divisor: %s" % (common_divisor))
         raise Exception
 
-    if (common_divisor == 'average'):
+    if common_divisor == "average":
         divisor = 0.5 * (len1 + len2)  # Compute average string length
-    elif (common_divisor == 'shortest'):
+    elif common_divisor == "shortest":
         divisor = min(len1, len2)
     else:  # Longest
         divisor = max(len1, len2)
@@ -116,17 +115,16 @@ def ontolcs(str1, str2, min_common_len=2, common_divisor='average',
     w_lcs = 0.0  # Basic longest common sub-string weight
     h_diff = 0.0  # Hamacher product difference
 
-    for (s1, s2) in [(str1, str2), (str2, str1)]:
-
+    for s1, s2 in [(str1, str2), (str2, str1)]:
         com_str, com_len, s1, s2 = do_lcs(s1, s2)  # Find initial LCS on input
 
         total_com_str = com_str
         total_com_len = com_len
 
-        while (com_len >= min_common_len):  # As long as there are common substrings
+        while com_len >= min_common_len:  # As long as there are common substrings
             com_str, com_len, s1n, s2n = do_lcs(s1, s2)
 
-            if (com_len >= min_common_len):
+            if com_len >= min_common_len:
                 total_com_str += com_str
                 total_com_len += com_len
                 s1, s2 = s1n, s2n
@@ -143,10 +141,12 @@ def ontolcs(str1, str2, min_common_len=2, common_divisor='average',
     w_lcs /= 2.0
     h_diff /= 2.0
 
-    assert (w_lcs >= 0.0) and (w_lcs <= 1.0), \
-        'Basic LCS similarity weight outside 0-1: %f' % (w_lcs)
-    assert (h_diff >= 0.0) and (h_diff <= 1.0), \
-        'Hamacher product difference outside 0-1: %f' % (h_diff)
+    assert (w_lcs >= 0.0) and (
+        w_lcs <= 1.0
+    ), "Basic LCS similarity weight outside 0-1: %f" % (w_lcs)
+    assert (h_diff >= 0.0) and (
+        h_diff <= 1.0
+    ), "Hamacher product difference outside 0-1: %f" % (h_diff)
 
     w_lcs_wink = winklermod(str1, str2, w_lcs)
 
@@ -154,13 +154,17 @@ def ontolcs(str1, str2, min_common_len=2, common_divisor='average',
 
     w = w / 2.0 + 0.5  # Scale into [0,1]
 
-    assert (w >= 0.0) and (w <= 1.0), \
-        'Ontology LCS similarity weight outside 0-1: %f' % (w)
+    assert (w >= 0.0) and (
+        w <= 1.0
+    ), "Ontology LCS similarity weight outside 0-1: %f" % (w)
 
     # A log message - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     #
-    logging.debug('Ontology longest common substring comparator string ' + \
-                  '"%s" with "%s"' % (str1, str2) + ' value: %.3f' % (w))
+    logging.debug(
+        "Ontology longest common substring comparator string "
+        + '"%s" with "%s"' % (str1, str2)
+        + " value: %.3f" % (w)
+    )
 
     return w
 
@@ -170,14 +174,14 @@ def ontolcs(str1, str2, min_common_len=2, common_divisor='average',
 
 def do_lcs(str1, str2):
     """Subroutine to extract longest common substring from the two input strings.
-       Returns the common substring, its length, and the two input strings with
-       the common substring removed.
+    Returns the common substring, its length, and the two input strings with
+    the common substring removed.
     """
 
     n = len(str1)
     m = len(str2)
 
-    if (n > m):  # Make sure n <= m, to use O(min(n,m)) space
+    if n > m:  # Make sure n <= m, to use O(min(n,m)) space
         str1, str2 = str2, str1
         n, m = m, n
         swapped = True
@@ -195,36 +199,38 @@ def do_lcs(str1, str2):
         current = (n + 1) * [0]
 
         for j in range(n):
-            if (str1[j] != str2[i]):
+            if str1[j] != str2[i]:
                 current[j] = 0
             else:
                 current[j] = previous[j - 1] + 1
-                if (current[j] > com_len):
+                if current[j] > com_len:
                     com_len = current[j]
                     com_ans1 = j
                     com_ans2 = i
 
-    com1 = str1[com_ans1 - com_len + 1:com_ans1 + 1]
-    com2 = str2[com_ans2 - com_len + 1:com_ans2 + 1]
+    com1 = str1[com_ans1 - com_len + 1 : com_ans1 + 1]
+    com2 = str2[com_ans2 - com_len + 1 : com_ans2 + 1]
 
-    if (com1 != com2):
-        logging.exception('LCS: Different common substrings: %s / %s in ' % \
-                          (com1, com2) + 'original strings: %s / %s' % \
-                          (str1, str2))
+    if com1 != com2:
+        logging.exception(
+            "LCS: Different common substrings: %s / %s in " % (com1, com2)
+            + "original strings: %s / %s" % (str1, str2)
+        )
         raise Exception
 
     # Remove common substring from input strings
     #
-    str1 = str1[:com_ans1 - com_len + 1] + str1[1 + com_ans1:]
-    str2 = str2[:com_ans2 - com_len + 1] + str2[1 + com_ans2:]
+    str1 = str1[: com_ans1 - com_len + 1] + str1[1 + com_ans1 :]
+    str2 = str2[: com_ans2 - com_len + 1] + str2[1 + com_ans2 :]
 
-    if (swapped == True):
+    if swapped == True:
         return com1, com_len, str2, str1
     else:
         return com1, com_len, str1, str2
 
 
 # =============================================================================
+
 
 def winklermod(str1, str2, in_weight):
     """Applies the Winkler modification if beginning of strings is the same.
@@ -245,13 +251,13 @@ def winklermod(str1, str2, in_weight):
 
       If the begining of the two strings (up to fisrt four characters) are the
       same, the similarity weight will be increased.
-   """
+    """
 
     # Quick check if the strings are empty or the same - - - - - - - - - - - - -
     #
-    if (str1 == '') or (str2 == ''):
+    if (str1 == "") or (str2 == ""):
         return 0.0
-    elif (str1 == str2):
+    elif str1 == str2:
         return 1.0
 
     # Compute how many characters are common at beginning - - - - - - - - - - - -
@@ -259,27 +265,30 @@ def winklermod(str1, str2, in_weight):
     minlen = min(len(str1), len(str2))
 
     for same in range(1, minlen + 1):
-        if (str1[:same] != str2[:same]):
+        if str1[:same] != str2[:same]:
             break
     same -= 1
-    if (same > 4):
+    if same > 4:
         same = 4
 
-    assert (same >= 0)
+    assert same >= 0
 
     winkler_weight = in_weight + same * 0.1 * (1.0 - in_weight)
 
-    assert (winkler_weight >= in_weight), 'Winkler modification is negative'
+    assert winkler_weight >= in_weight, "Winkler modification is negative"
 
-    assert (winkler_weight >= 0.0) and (winkler_weight <= 1.0), \
-        'Similarity weight outside 0-1: %f' % (w)
+    assert (winkler_weight >= 0.0) and (
+        winkler_weight <= 1.0
+    ), "Similarity weight outside 0-1: %f" % (w)
 
     # A log message - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     #
-    logging.debug('Winkler modification for string "%s" and "%s": Input ' % \
-                  (str1, str2) + 'weight %.3f modified to %.3f' % \
-                  (in_weight, winkler_weight))
+    logging.debug(
+        'Winkler modification for string "%s" and "%s": Input ' % (str1, str2)
+        + "weight %.3f modified to %.3f" % (in_weight, winkler_weight)
+    )
 
     return winkler_weight
+
 
 # =============================================================================

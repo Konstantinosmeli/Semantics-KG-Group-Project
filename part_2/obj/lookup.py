@@ -15,7 +15,6 @@ class Lookup(object):
         self.service_url = lookup_url
 
     def getJSONRequest(self, params, attempts=3):
-
         try:
             # urllib has been split up in Python 3.
             # The urllib.urlencode() function is now urllib.parse.urlencode(),
@@ -67,7 +66,6 @@ class DBpediaLookup(Lookup):
         # return "http://lookup.dbpedia.org/api/search/PrefixSearch"
 
     def __createParams(self, query, limit, query_cls=""):
-
         if query_cls == "":
             params = {
                 "query": query,
@@ -98,7 +96,6 @@ class DBpediaLookup(Lookup):
         entities = list()
 
         for element in json["docs"]:
-
             types = set()
 
             if "type" in element:
@@ -170,7 +167,6 @@ class WikidataAPI(Lookup):
         return "https://www.wikidata.org/w/api.php"
 
     def __createParams(self, query, limit, type="item"):
-
         params = {
             "action": "wbsearchentities",
             "format": "json",
@@ -192,7 +188,6 @@ class WikidataAPI(Lookup):
         entities = list()
 
         for element in json["search"]:
-
             # empty list of type from wikidata lookup
             types = set()
 
@@ -247,7 +242,6 @@ class GoogleKGLookup(Lookup):
         return "https://kgsearch.googleapis.com/v1/entities:search"
 
     def __createParams(self, query, limit):
-
         params = {
             "query": query,
             "limit": limit,
@@ -265,11 +259,9 @@ class GoogleKGLookup(Lookup):
     """
 
     def __extractKGEntities(self, json, filter=""):
-
         entities = list()
 
         for element in json["itemListElement"]:
-
             types = set()
 
             for t in element["result"]["@type"]:
@@ -308,7 +300,6 @@ class GoogleKGLookup(Lookup):
 
 
 if __name__ == "__main__":
-
     # query="Chicago Bulls"
     query = "Congo"
 
