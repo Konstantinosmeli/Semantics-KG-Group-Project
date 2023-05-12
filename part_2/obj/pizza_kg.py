@@ -33,11 +33,17 @@ DEFAULT_PREFIXES = [
 class PizzaKG(object):
     # Setting of knowledge graphs object
     file_path: str
-    name_space_str: str
+    namespace_str: str
     prefix: str
     entity_uri_dict: dict = {}
-    enable_external_uri: bool = True
+    enable_external_uri: bool = False
     external_uri_score_threshold = 0.4
+    noises = ["and", "/", "&", "."]
+    category_noise = ["Restaurant", "restaurant"]
+    meaningful_noise = {
+        "and": ",",
+        "or": ","
+    }
 
     def __init__(
         self,
@@ -62,8 +68,8 @@ class PizzaKG(object):
         self.graph = Graph()
 
         # Setup customised name space
-        self.name_space_str = _name_space_str
-        self.name_space = Namespace(self.name_space_str)
+        self.namespace_str = _name_space_str
+        self.namespace = Namespace(self.namespace_str)
         self.graph.bind(_name_space_prefix, _name_space_str)
 
         # Binding the prefixes
@@ -74,15 +80,9 @@ class PizzaKG(object):
         self.wikidata = lookup.WikidataAPI()
         self.google_kg = lookup.GoogleKGLookup()
 
-        # Preprocess all columns
-        for column in self.data.columns:
-            if self.data[column].dtype not in ["int", "float64"]:
-                self.str_column_preprocessing(column)
-            self.numeric_column_preprocessing(column)
-
-        # Preprocess pizza name
+        # Preprocessing menu item
         self.data["menu item"] = self.data["menu item"].apply(
-            lambda row: self.menu_name_preprocessing(row)
+            lambda e: self.menu_name_preprocessing(e)
         )
 
     ######### MAIN TASK: CSV TO RDF CONVERSION #########
@@ -97,11 +97,13 @@ class PizzaKG(object):
         print("######### STARTING CONVERSION #########")
 
         # Country
-        self.generate_subclass_triple(parent="Location", child="Country")
+        self.graph.add(
+            (self.namespace.Country, RDFS.subClassOf, self.namespace.Location)
+        )
         self.data["country"].apply(
             lambda x: self.generate_type_triple(
                 entity=x,
-                class_type=self.name_space.Country,
+                class_type=self.namespace.Country,
                 _enable_external_uri=_enable_external_uri,
                 _category_filter="http://dbpedia.org/resource/Category:Lists_of_countries",
             )
@@ -109,7 +111,7 @@ class PizzaKG(object):
         self.data.apply(
             lambda row: self.generate_literal_triple(
                 entity=row["country"],
-                predicate=self.name_space.name,
+                predicate=self.namespace.name,
                 literal=row["country"],
                 datatype=XSD.string,
             ),
@@ -117,11 +119,11 @@ class PizzaKG(object):
         )
 
         # State
-        self.generate_subclass_triple(parent="Location", child="State")
+        self.graph.add((self.namespace.State, RDFS.subClassOf, self.namespace.Location))
         self.data["state"].apply(
             lambda x: self.generate_type_triple(
                 entity=x,
-                class_type=self.name_space.State,
+                class_type=self.namespace.State,
                 _category_filter="http://dbpedia.org/resource/Category:States_of_the_United_States",
                 _external_uri_score_threshold=0.8,
             )
@@ -129,7 +131,7 @@ class PizzaKG(object):
         self.data.apply(
             lambda row: self.generate_literal_triple(
                 entity=row["state"],
-                predicate=self.name_space.name,
+                predicate=self.namespace.name,
                 literal=row["state"],
                 datatype=XSD.string,
             ),
@@ -139,9 +141,9 @@ class PizzaKG(object):
             lambda row: self.generate_object_triple(
                 subject=row["state"],
                 predicates=[
-                    self.name_space.isStateOf,
-                    self.name_space.locatedIn,
-                    self.name_space.locatedInCountry,
+                    self.namespace.isStateOf,
+                    self.namespace.locatedIn,
+                    self.namespace.locatedInCountry,
                 ],
                 object=row["country"],
             ),
@@ -149,19 +151,19 @@ class PizzaKG(object):
         )
 
         # City
-        self.generate_subclass_triple(parent="Location", child="City")
+        self.graph.add((self.namespace.City, RDFS.subClassOf, self.namespace.Location))
         self.data["city"].apply(
             lambda x: self.generate_type_triple(
                 entity=x,
-                class_type=self.name_space.City,
+                class_type=self.namespace.City,
                 _category_filter="http://dbpedia.org/resource/Category:Cities_in_the_United_States",
-                _external_uri_score_threshold=0.7,
+                _external_uri_score_threshold=0.8,
             )
         )
         self.data.apply(
             lambda row: self.generate_literal_triple(
                 entity=row["city"],
-                predicate=self.name_space.name,
+                predicate=self.namespace.name,
                 literal=row["city"],
                 datatype=XSD.string,
             ),
@@ -170,7 +172,7 @@ class PizzaKG(object):
         self.data.apply(
             lambda row: self.generate_object_triple(
                 subject=row["city"],
-                predicates=[self.name_space.locatedInState, self.name_space.locatedIn],
+                predicates=[self.namespace.locatedInState, self.namespace.locatedIn],
                 object=row["state"],
             ),
             axis=1,
@@ -178,7 +180,7 @@ class PizzaKG(object):
         self.data.apply(
             lambda row: self.generate_object_triple(
                 subject=row["city"],
-                predicates=[self.name_space.locatedCountry, self.name_space.locatedIn],
+                predicates=[self.namespace.locatedCountry, self.namespace.locatedIn],
                 object=row["country"],
             ),
             axis=1,
@@ -186,19 +188,21 @@ class PizzaKG(object):
 
         # Address
         # We will have to concat a few field to make address identifier
-        self.data["address_id"] = self.data[["address", "city", "state"]].apply(
-            lambda row: "_".join(row.astype(str)).replace(" ", "_"), axis=1
+        self.graph.add(
+            (self.namespace.Address, RDFS.subClassOf, self.namespace.Location)
         )
-        self.generate_subclass_triple(parent="Location", child="Address")
+        self.data["address_id"] = self.data[["address", "city", "state"]].apply(
+            lambda row: " ".join(row.astype(str)), axis=1
+        )
         self.data["address_id"].apply(
             lambda x: self.generate_type_triple(
-                entity=x, class_type=self.name_space.Address, _enable_external_uri=False
+                entity=x, class_type=self.namespace.Address, _enable_external_uri=False
             )
         )
         self.data.apply(
             lambda row: self.generate_literal_triple(
                 entity=row["address_id"],
-                predicate=self.name_space.firstLineAddress,
+                predicate=self.namespace.firstLineAddress,
                 literal=row["address"],
                 datatype=XSD.string,
             ),
@@ -207,7 +211,7 @@ class PizzaKG(object):
         self.data.apply(
             lambda row: self.generate_literal_triple(
                 entity=row["address_id"],
-                predicate=self.name_space.postCode,
+                predicate=self.namespace.postCode,
                 literal=row["postcode"],
                 datatype=XSD.string,
             ),
@@ -216,69 +220,98 @@ class PizzaKG(object):
         self.data.apply(
             lambda row: self.generate_object_triple(
                 subject=row["address_id"],
-                predicates=[self.name_space.locatedCity, self.name_space.locatedIn],
+                predicates=[self.namespace.locatedCity, self.namespace.locatedIn],
                 object=row["city"],
+            ),
+            axis=1,
+        )
+        self.data.apply(
+            lambda row: self.generate_object_triple(
+                subject=row["address_id"],
+                predicates=[self.namespace.locatedState, self.namespace.locatedIn],
+                object=row["state"],
+            ),
+            axis=1,
+        )
+        self.data.apply(
+            lambda row: self.generate_object_triple(
+                subject=row["address_id"],
+                predicates=[self.namespace.locatedCountry, self.namespace.locatedIn],
+                object=row["country"],
             ),
             axis=1,
         )
 
         # Restaurant
-        self.data["restaurant_id"] = self.data[["name", "address_id"]].apply(
-            lambda row: "_".join(row.astype(str)).replace(" ", "_"), axis=1
+        self.graph.add(
+            (self.namespace.Restaurant, RDFS.subClassOf, self.namespace.Location)
         )
-        self.generate_subclass_triple(parent="Location", child="Restaurant")
-        self.data["categories"].apply(
-            lambda row: [
-                self.generate_subclass_triple(
-                    child=x.replace(" ", "").rstrip("s"),
-                    parent="Restaurant",
-                    _enable_external_uri=False,
-                )
-                for x in row.split(",")
-                if x not in ["Restaurant", "Pizza", "Location"]
-            ]
+        self.data["restaurant_id"] = self.data[["name", "address_id"]].apply(
+            lambda row: " ".join(row.astype(str)), axis=1
+        )
+        self.data["restaurant_id"].apply(
+            lambda x: self.generate_type_triple(
+                entity=x,
+                class_type=self.namespace.Restaurant,
+                _enable_external_uri=False,
+            )
         )
         self.data.apply(
-            lambda row: [
-                self.generate_type_triple(
-                    entity=row["restaurant_id"],
-                    class_type=self.name_space[x.replace(" ", "").rstrip("s")],
-                    _enable_external_uri=False,
-                )
-                for x in row["categories"].split(",")
-            ],
+            lambda row: self.generate_literal_triple(
+                entity=row["restaurant_id"],
+                predicate=self.namespace.name,
+                literal=row["name"],
+                datatype=XSD.string,
+            ),
             axis=1,
         )
         self.data.apply(
             lambda row: self.generate_object_triple(
                 subject=row["restaurant_id"],
-                predicates=[self.name_space.locatedAddress, self.name_space.locatedIn],
+                predicates=[self.namespace.locatedAddress, self.namespace.locatedIn],
                 object=row["address_id"],
             ),
             axis=1,
         )
+        self.data["categories"].apply(
+            lambda e: [
+                self.graph.add((URIRef(self.generate_internal_class_name(_e)), RDFS.subClassOf, self.namespace.Restaurant))
+                for _e in self.preprocessing_array_string(
+                    e, self.noises, self.category_noise
+                )
+            ]
+        )
         self.data.apply(
-            lambda row: self.generate_literal_triple(
+            lambda row: [self.generate_type_triple(
                 entity=row["restaurant_id"],
-                predicate=self.name_space.name,
-                literal=row["name"],
-                datatype=XSD.string,
-            ),
-            axis=1,
+                class_type=(URIRef(self.generate_internal_class_name(_e))),
+                _enable_external_uri=False,
+            ) for _e in self.preprocessing_array_string(
+                    row["categories"], self.noises, self.category_noise
+                )],
+            axis=1
         )
 
         # Currency
         self.data["currency"].apply(
             lambda x: self.generate_type_triple(
                 entity=x,
-                class_type=self.name_space.Currency,
+                class_type=self.namespace.Currency,
                 _external_uri_score_threshold=0.8,
             )
         )
         self.data.apply(
+            lambda row: self.generate_object_triple(
+                subject=row["currency"],
+                predicates=[self.namespace.currencyOfCountry],
+                object=row["country"],
+            ),
+            axis=1,
+        )
+        self.data.apply(
             lambda row: self.generate_literal_triple(
                 entity=row["currency"],
-                predicate=self.name_space.name,
+                predicate=self.namespace.name,
                 literal=row["currency"],
                 datatype=XSD.string,
             ),
@@ -286,20 +319,27 @@ class PizzaKG(object):
         )
 
         # Item value
-        self.data["item_value_id"] = (
-            self.data["item value"].astype(str) + self.data["currency"]
+        # We will need to preprocess item value
+        self.data["item_value_id"] = self.data[["item value", "currency"]].apply(
+            lambda row: "".join(row.astype(str))
+            if (
+                self.is_missing(row["item value"]) == False
+                and self.is_missing(row["currency"]) == False
+            )
+            else "",
+            axis=1,
         )
         self.data["item_value_id"].apply(
             lambda x: self.generate_type_triple(
                 entity=x,
-                class_type=self.name_space.ItemValue,
+                class_type=self.namespace.ItemValue,
                 _enable_external_uri=False,
             )
         )
         self.data.apply(
             lambda row: self.generate_object_triple(
                 subject=row["item_value_id"],
-                predicates=[self.name_space.amountCurrency],
+                predicates=[self.namespace.amountCurrency],
                 object=row["currency"],
             ),
             axis=1,
@@ -307,7 +347,7 @@ class PizzaKG(object):
         self.data.apply(
             lambda row: self.generate_literal_triple(
                 entity=row["item_value_id"],
-                predicate=self.name_space.amount,
+                predicate=self.namespace.amount,
                 literal=row["item value"],
                 datatype=XSD.double,
             ),
@@ -315,32 +355,21 @@ class PizzaKG(object):
         )
 
         # Pizza & Ingredient
-        self.generate_subclass_triple(parent="Food", child="Ingredient")
-        self.generate_subclass_triple(parent="Food", child="Pizza")
+        self.graph.add((self.namespace.MenuItem, RDFS.subClassOf, self.namespace.Food))
         self.data["item_id"] = self.data[["menu item", "restaurant_id"]].apply(
-            lambda row: "_".join(row.astype(str)).replace(" ", "_"), axis=1
+            lambda row: " ".join(row.astype(str)), axis=1
         )
-        self.data["menu item"].apply(
-            lambda x: self.generate_subclass_triple(
-                child=x.replace(" ", "").rstrip("s"),
-                parent="Pizza",
-                _external_uri_score_threshold=0.8,
+        self.data["item_id"].apply(
+            lambda x: self.generate_type_triple(
+                entity=x,
+                class_type=self.namespace.MenuItem,
+                _external_uri_score_threshold=0.7,
             )
-        )
-        self.data.apply(
-            lambda row: self.generate_type_triple(
-                entity=row["item_id"],
-                class_type=self.name_space[
-                    row["menu item"].replace(" ", "").rstrip("s")
-                ],
-                _enable_external_uri=False,
-            ),
-            axis=1,
         )
         self.data.apply(
             lambda row: self.generate_literal_triple(
                 entity=row["item_id"],
-                predicate=self.name_space.itemName,
+                predicate=self.namespace.name,
                 literal=row["menu item"],
                 datatype=XSD.string,
             ),
@@ -349,7 +378,7 @@ class PizzaKG(object):
         self.data.apply(
             lambda row: self.generate_object_triple(
                 subject=row["item_id"],
-                predicates=[self.name_space.servedInRestaurant],
+                predicates=[self.namespace.servedInRestaurant],
                 object=row["restaurant_id"],
             ),
             axis=1,
@@ -357,16 +386,8 @@ class PizzaKG(object):
         self.data.apply(
             lambda row: self.generate_object_triple(
                 subject=row["item_id"],
-                predicates=[self.name_space.hasValue],
+                predicates=[self.namespace.hasValue],
                 object=row["item_value_id"],
-            ),
-            axis=1,
-        )
-        self.data.apply(
-            lambda row: self.generate_ingredient_list(
-                row,
-                _category_filter="https://dbpedia.org/page/Category:Food_ingredients",
-                _external_uri_score_threshold=0.65,
             ),
             axis=1,
         )
@@ -376,56 +397,6 @@ class PizzaKG(object):
                 time.time() - start_time
             )
         )
-
-
-    def generate_ingredient_list(
-        self,
-        row,
-        _enable_external_uri: bool = enable_external_uri,
-        _category_filter: str = "",
-        _external_uri_score_threshold: float = external_uri_score_threshold,
-    ):
-        """
-        Since the data is noisy which description and ingredient mixed, therefore, use external KG with category search to classify what is description and what is ingredient.
-        In the case that we turn off public KG, everything in column description will be description literal triple.
-        :param row:
-        :param _enable_external_uri:
-        :param _category_filter:
-        :param _external_uri_score_threshold:
-        :return:
-        """
-        elements = [x.strip().rstrip("s").replace(" ", "_") for x in row["item description"].split(",")]
-        for element in elements:
-            if _enable_external_uri:
-                _uri, _score = self.generate_external_uri(
-                    _query=element, _category_filter=_category_filter
-                )
-                if _score >= _external_uri_score_threshold:
-                    row["ingredient_id"] = element + "_" + row["item_id"]
-                    child_uri, parent_uri = self.generate_subclass_triple(
-                        parent="Ingredient",
-                        child=element,
-                        _enable_external_uri=_enable_external_uri,
-                        _external_uri_score_threshold=_external_uri_score_threshold,
-                        _child_category_filter=_category_filter
-                    )
-                    self.generate_type_triple(
-                        entity=row["ingredient_id"],
-                        class_type=child_uri,
-                        _enable_external_uri=False
-                    )
-                    self.generate_object_triple(
-                        subject=row["ingredient_id"],
-                        predicates=[self.name_space.isIngredientOf],
-                        object=row["item_id"],
-                    )
-                else:
-                    self.generate_literal_triple(
-                        entity=row["item_id"],
-                        predicate=self.name_space.description,
-                        literal=element,
-                        datatype=XSD.string
-                    )
 
     ######### PREPROCESSINGS #########
     def bind_prefixes(self, prefixes):
@@ -438,67 +409,6 @@ class PizzaKG(object):
         for prefix in prefixes:
             self.graph.bind(prefix[0], prefix[1])
 
-    def str_column_preprocessing(self, column: str):
-        """
-        Only do preprocessing with string column, not numeric
-        We will remove special character that might broke the seach
-        However, there are some character that contain meaning, we will not
-        remove them, instead, we will replace
-        :param column:
-        :return: None
-        """
-
-        # Fill all missing values with space
-        self.data[column] = self.data[column].fillna(" ")
-
-        # Convert all data (including missing to string)
-        self.data[column] = self.data[column].astype(str)
-
-        # We check all character in the column
-        chars = list(set(self.data[column].sum()))
-
-        # List all character is not alphanumeric and and white space
-        non_alphanumeric_chars = [
-            e for e in chars if (not e.isalnum()) & (e not in [" ", "'", ",", "-"])
-        ]
-
-        # Dictionary to replace meaningful non-alphanumeric characters
-        meaningful_non_alphanumeric = {
-            "@": "at",
-            "&": "and",
-            "+": "with",
-            "-": "_",
-            "'": "_",
-        }
-
-        # Remove meaningful non-alphanumeric characters from the list
-        # Since we will not remove them, but replace them
-        non_alphanumeric_chars = [
-            e
-            for e in non_alphanumeric_chars
-            if e not in meaningful_non_alphanumeric.keys()
-        ]
-
-        # Replace all meaningful non-alphanumeric characters
-        for x, y in meaningful_non_alphanumeric.items():
-            self.data[column] = self.data[column].str.replace(x, y, regex=False)
-
-        # Remove all non-meaningful non-alphanumeric char
-        for e in non_alphanumeric_chars:
-            self.data[column] = self.data[column].str.replace(e, " ", regex=False)
-
-        # Remove consecutive white-trailing
-        self.data[column] = self.data[column].str.replace(r" +", " ", regex=False)
-
-    def numeric_column_preprocessing(self, column: str):
-        """
-        For numeric column, we will replace with numpy.nan
-        :param column:
-        :return:
-        """
-        # Fill all missing values of numeric columns
-        self.data[column] = self.data[column].fillna(np.nan)
-
     def menu_name_preprocessing(self, item_name: str):
         """
         We do notice that there are some pizza name that in this format:
@@ -508,13 +418,11 @@ class PizzaKG(object):
         :return: processed item name
         """
 
-        item_name = item_name.lower()
-
         # Menu item pattern, for example "Pizza, Margherita"
         pattern = re.compile(r"^pizza\s?,\s?[a-z\s]+.$")
 
         # Match result
-        matched = re.search(pattern, item_name)
+        matched = re.search(pattern, item_name.lower())
 
         # Check if match exist and then replace
         if matched:
@@ -527,7 +435,21 @@ class PizzaKG(object):
         :param _entity:
         :return:
         """
-        return _entity.replace(" ", "_").replace("(", "").replace(")", "")
+        pattern = re.compile("[\W_]+")
+        return pattern.sub("_", _entity)
+
+    def preprocessing_array_string(
+        self, _input: str, _noises: [str], _element_noise: [str], _meaningful_noise = {}
+    ):
+        for noise, replacement in _meaningful_noise.items():
+            _input = _input.replace(noise, replacement)
+        for noise in _noises:
+            _input = _input.replace(noise, "")
+        _input = re.sub(" +", " ", _input).strip()
+        _input_arr = _input.split(",")
+        _input_arr = [e.rstrip("s").strip() for e in _input_arr]
+        _input_arr = [e for e in _input_arr if e not in _element_noise]
+        return _input_arr
 
     ######### ENTITY GENERATION #########
     def generate_uri(
@@ -548,7 +470,7 @@ class PizzaKG(object):
         :param _category_filter:
         :return:
         """
-        uri = self.name_space_str + self.process_entity_lexical(_entity=entity)
+        uri = self.namespace_str + self.process_entity_lexical(_entity=entity)
 
         if _enable_external_uri:
             _uri, _score = self.generate_external_uri(
@@ -605,6 +527,10 @@ class PizzaKG(object):
                     score = _score
 
         return uri, score
+
+    def generate_internal_class_name(self, _name: str):
+        pattern = re.compile("[\W_]+")
+        return self.namespace_str + pattern.sub("", _name)
 
     ######### TRIPLES GENERATIONS #########
     def generate_type_triple(
@@ -684,49 +610,6 @@ class PizzaKG(object):
         for predicate in predicates:
             self.graph.add((URIRef(subject_uri), predicate, URIRef(object_uri)))
 
-    def generate_subclass_triple(
-        self,
-        parent: str,
-        child: str,
-        _enable_external_uri: bool = False,
-        _external_uri_score_threshold: float = external_uri_score_threshold,
-        _parent_category_filter: str = "",
-        _child_category_filter: str = "",
-    ):
-        """
-        Generate literal triple: Example: ns:AmericanRestaurant rdfs:isSubClassOf ns:Restaurant
-        :param parent:
-        :param child:
-        :return:
-        """
-        if self.is_missing(parent) or self.is_missing(child):
-            return
-
-            # Check if item exist in dictionary so that we don't have to call API again
-        if parent.lower() in self.entity_uri_dict:
-            parent_uri = self.entity_uri_dict[parent.lower()]
-        else:
-            parent_uri = self.generate_uri(
-                entity=parent,
-                _enable_external_uri=_enable_external_uri,
-                _category_filter=_parent_category_filter,
-                _external_uri_score_threshold=_external_uri_score_threshold,
-            )
-
-        if child.lower() in self.entity_uri_dict:
-            child_uri = self.entity_uri_dict[child.lower()]
-        else:
-            child_uri = self.generate_uri(
-                entity=child,
-                _enable_external_uri=_enable_external_uri,
-                _category_filter=_child_category_filter,
-                _external_uri_score_threshold=_external_uri_score_threshold,
-            )
-
-        self.graph.add((URIRef(child_uri), RDFS.subClassOf, URIRef(parent_uri)))
-
-        return URIRef(child_uri), URIRef(parent_uri)
-
     ######### REASONING #########
     def perform_reasoning(self, ontology: str):
         """
@@ -770,4 +653,5 @@ class PizzaKG(object):
             or (value == " ")
             or (value == np.nan)
             or (value == "_")
+            or (value == "nan")
         )

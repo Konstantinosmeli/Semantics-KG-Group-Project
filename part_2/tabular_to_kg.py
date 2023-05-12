@@ -14,6 +14,10 @@ if __name__ == '__main__':
                        _name_space_prefix=NAMESPACE_PREFIX)
 
     pizza_kg.convert_csv_to_rdf()
-    pizza_kg.save_graph("pizza_restaurant_csv_rdf.ttl")
-    pizza_kg.perform_reasoning(ontology=ONTOLOGY)
-    pizza_kg.save_graph("pizza_restaurant_reasoned.ttl")
+    pizza_kg.save_graph("test.ttl")
+    # pizza_kg.perform_reasoning(ontology=ONTOLOGY)
+    # pizza_kg.save_graph("pizza_restaurant_reasoned.ttl")
+    # array = "Vegetarian / Vegan Restaurant,Restaurant,Bar & Grills,Caterers and,Restaurants"
+    # noises = ["and", "/", "&"]
+    # element_noise = ["Restaurant", "restaurant"]
+    # print(pizza_kg.preprocessing_array_string(array, noises, element_noise))
