@@ -20,26 +20,22 @@ class SparqlQuery:
         for row in result:
             print(row)
         result.serialize(destination=f'{output_file}_results.csv',format='csv')
+    
+
 
 if __name__ == "__main__":
-    filename = 'part_2/pizza-ontology/pizza_restaurants_with_reasoning_sparql1.ttl'
+    filename = 'part_2/pizza-ontology/pizza_restaurant_reasoned.ttl'
 
     sparql_query = SparqlQuery(filename)
-
+            
     def task1():
         query = '''
         SELECT ?name ?address ?city ?state ?postcode ?country
         WHERE {
-            ?restaurant fp:name ?name .
-            ?restaurant fp:address ?address .
-            ?restaurant fp:city ?city .
-            ?restaurant fp:state ?state .
-            ?restaurant fp:postcode ?postcode .
-            ?restaurant fp:country ?country
-            FILTER regex(?state, "TX", "i")
+            ?value cw:locatedCity ?city .
         }
         '''
-        sparql_query.make_query_to_csv(query,'SPARQL1_subtask')
+        sparql_query.make_query_to_csv(query,'SPARQL1.1_subtask')
 
     def task2():
         query = '''
@@ -54,4 +50,18 @@ if __name__ == "__main__":
         '''
         sparql_query.make_query_to_csv(query,'SPARQL2_subtask')
 
-    task2()
+    def print_predicates():
+        predicates = set(sparql_query.graph.predicates())
+
+        prefixes = sparql_query.graph.namespace_manager.namespaces()
+
+        # Print the predicates
+        # for predicate in predicates:
+        #     print(predicate)
+
+        # Print the prefixes
+        for prefix, namespace in prefixes:
+            print(f"Prefix: {prefix}, Namespace: {namespace}")
+
+    #print_predicates()
+    task1()
