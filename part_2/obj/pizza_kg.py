@@ -36,14 +36,11 @@ class PizzaKG(object):
     namespace_str: str
     prefix: str
     entity_uri_dict: dict = {}
-    enable_external_uri: bool = False
+    enable_external_uri: bool = True
     external_uri_score_threshold = 0.4
     noises = ["and", "/", "&", "."]
     category_noise = ["Restaurant", "restaurant"]
-    meaningful_noise = {
-        "and": ",",
-        "or": ","
-    }
+    meaningful_noise = {"and": ",", "or": ","}
 
     def __init__(
         self,
@@ -275,21 +272,32 @@ class PizzaKG(object):
         )
         self.data["categories"].apply(
             lambda e: [
-                self.graph.add((URIRef(self.generate_internal_class_name(_e)), RDFS.subClassOf, self.namespace.Restaurant))
+                self.graph.add(
+                    (
+                        URIRef(self.generate_internal_class_name(_e)),
+                        RDFS.subClassOf,
+                        self.namespace.Restaurant,
+                    )
+                )
                 for _e in self.preprocessing_array_string(
                     e, self.noises, self.category_noise
                 )
             ]
         )
         self.data.apply(
-            lambda row: [self.generate_type_triple(
-                entity=row["restaurant_id"],
-                class_type=(URIRef(self.generate_internal_class_name(_e))),
-                _enable_external_uri=False,
-            ) for _e in self.preprocessing_array_string(
-                    row["categories"], self.noises, self.category_noise
-                )],
-            axis=1
+            lambda row: [
+                self.generate_type_triple(
+                    entity=row["restaurant_id"],
+                    class_type=(URIRef(self.generate_internal_class_name(_e))),
+                    _enable_external_uri=False,
+                )
+                for _e in self.preprocessing_array_string(
+                    _input=row["categories"],
+                    _noises=self.noises,
+                    _element_noise=self.category_noise,
+                )
+            ],
+            axis=1,
         )
 
         # Currency
@@ -356,6 +364,7 @@ class PizzaKG(object):
 
         # Pizza & Ingredient
         self.graph.add((self.namespace.MenuItem, RDFS.subClassOf, self.namespace.Food))
+        self.graph.add((self.namespace.Ingredient, RDFS.subClassOf, self.namespace.Food))
         self.data["item_id"] = self.data[["menu item", "restaurant_id"]].apply(
             lambda row: " ".join(row.astype(str)), axis=1
         )
@@ -388,6 +397,14 @@ class PizzaKG(object):
                 subject=row["item_id"],
                 predicates=[self.namespace.hasValue],
                 object=row["item_value_id"],
+            ),
+            axis=1,
+        )
+
+        # Item description
+        self.data.apply(
+            lambda row: self.generate_description(
+                row, _enable_external_uri=self.enable_external_uri
             ),
             axis=1,
         )
@@ -439,7 +456,11 @@ class PizzaKG(object):
         return pattern.sub("_", _entity)
 
     def preprocessing_array_string(
-        self, _input: str, _noises: [str], _element_noise: [str], _meaningful_noise = {}
+        self,
+        _input: str,
+        _noises: [str],
+        _element_noise: [str] = [],
+        _meaningful_noise={},
     ):
         for noise, replacement in _meaningful_noise.items():
             _input = _input.replace(noise, replacement)
@@ -530,7 +551,7 @@ class PizzaKG(object):
 
     def generate_internal_class_name(self, _name: str):
         pattern = re.compile("[\W_]+")
-        return self.namespace_str + pattern.sub("", _name)
+        return self.namespace_str + pattern.sub("", _name).capitalize()
 
     ######### TRIPLES GENERATIONS #########
     def generate_type_triple(
@@ -609,6 +630,56 @@ class PizzaKG(object):
 
         for predicate in predicates:
             self.graph.add((URIRef(subject_uri), predicate, URIRef(object_uri)))
+
+    def generate_description(
+        self, row, _enable_external_uri: bool = enable_external_uri
+    ):
+        if not _enable_external_uri:
+            self.generate_literal_triple(
+                entity=row["item_id"],
+                predicate=self.namespace.description,
+                literal=row["item description"],
+                datatype=XSD.string,
+            )
+        else:
+            if self.is_missing(row["item description"]):
+                pass
+            else:
+                desc_array = self.preprocessing_array_string(
+                    _input=row["item description"],
+                    _noises=self.noises,
+                    _meaningful_noise=self.meaningful_noise,
+                )
+                for desc in desc_array:
+                    if self.is_missing(desc):
+                        pass
+                    else:
+                        uri = self.generate_uri(
+                            entity=desc,
+                            _enable_external_uri=_enable_external_uri,
+                            _category_filter="https://dbpedia.org/page/Category:Food_ingredients",
+                            _external_uri_score_threshold=0.65,
+                        )
+                        if uri.startswith(self.namespace):
+                            self.generate_literal_triple(
+                                entity=row["item_id"],
+                                predicate=self.namespace.description,
+                                literal=desc,
+                                datatype=XSD.string,
+                            )
+                        else:
+                            self.graph.add((URIRef(uri), RDFS.subClassOf, self.namespace.Ingredient))
+                            ingredient_id = desc + "_" + row["item_id"]
+                            self.generate_type_triple(
+                                entity=ingredient_id,
+                                class_type=URIRef(uri),
+                                _enable_external_uri=False
+                            )
+                            self.generate_object_triple(
+                                subject=ingredient_id,
+                                predicates=[self.namespace.isIngredientOf],
+                                object=row["item_id"],
+                            )
 
     ######### REASONING #########
     def perform_reasoning(self, ontology: str):
