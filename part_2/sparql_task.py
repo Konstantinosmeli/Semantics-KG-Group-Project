@@ -24,15 +24,15 @@ class SparqlQuery:
 
 
 if __name__ == "__main__":
-    filename = 'part_2/pizza-ontology/pizza_restaurant_reasoned.ttl'
+    filename = 'part_2/pizza-ontology/test.ttl'
 
     sparql_query = SparqlQuery(filename)
             
     def task1():
         query = '''
-        SELECT ?name ?address ?city ?state ?postcode ?country
+        SELECT DISTINCT ?name ?address ?city ?state ?postcode ?country
         WHERE {
-            ?value cw:locatedCity ?city .
+           ?x cw:typeRestaurant ?name .
         }
         '''
         sparql_query.make_query_to_csv(query,'SPARQL1.1_subtask')
@@ -56,12 +56,12 @@ if __name__ == "__main__":
         prefixes = sparql_query.graph.namespace_manager.namespaces()
 
         # Print the predicates
-        # for predicate in predicates:
-        #     print(predicate)
+        for predicate in predicates:
+            print(predicate)
 
         # Print the prefixes
-        for prefix, namespace in prefixes:
-            print(f"Prefix: {prefix}, Namespace: {namespace}")
+        # for prefix, namespace in prefixes:
+        #     print(f"Prefix: {prefix}, Namespace: {namespace}")
 
     #print_predicates()
     task1()
