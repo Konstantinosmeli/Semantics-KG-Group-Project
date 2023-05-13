@@ -1,0 +1,20 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+<http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#AmericanPizza> owl:equivalentClass <http://www.co-ode.org/ontologies/pizza/pizza.owl#American> .
+
+<http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Artichokes> owl:equivalentClass <http://www.co-ode.org/ontologies/pizza/pizza.owl#ArtichokeTopping> .
+
+<http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Country> owl:equivalentClass <http://www.co-ode.org/ontologies/pizza/pizza.owl#Country> .
+
+<http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Food> owl:equivalentClass <http://www.co-ode.org/ontologies/pizza/pizza.owl#Food> .
+
+<http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#MargheritaPizza> owl:equivalentClass <http://www.co-ode.org/ontologies/pizza/pizza.owl#Margherita> .
+
+<http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#MeatPizza> owl:equivalentClass <http://www.co-ode.org/ontologies/pizza/pizza.owl#MeatyPizza> .
+
+<http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Parmesan> owl:equivalentClass <http://www.co-ode.org/ontologies/pizza/pizza.owl#Parmense> .
+
+<http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Pizza> owl:equivalentClass <http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza> .
+
+<http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Pizzeria> owl:equivalentClass <http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza> .
+

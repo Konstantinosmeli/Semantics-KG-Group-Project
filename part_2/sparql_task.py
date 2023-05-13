@@ -14,6 +14,7 @@ class SparqlQuery:
         else:
             print('File type given was incorrect. Needs to be in .ttl or .rdf format')
 
+    # Creates the query and saves the result into a csv file.
     def make_query_to_csv(self,query,output_file):
         result = self.graph.query(query)
         print(f'Result: {result} Length: {len(result)}')
@@ -27,7 +28,8 @@ if __name__ == "__main__":
     filename = 'part_2/pizza-ontology/test.ttl'
 
     sparql_query = SparqlQuery(filename)
-            
+    
+    #This query retrieves all the restaurants in the state of Texas
     def task1():
         query = ''' 
         SELECT ?name ?firstLineAddress ?cityName  ?stateName
@@ -45,6 +47,7 @@ if __name__ == "__main__":
         '''
         sparql_query.make_query_to_csv(query,'SPARQL1.1_subtask')
 
+    # This query returns the average price of all items on the Burgers & Cupcakes menu
     def task2():
         query = '''
         SELECT ?restaurantName (AVG(?menu_item_price) AS ?avg_value)
@@ -59,6 +62,8 @@ if __name__ == "__main__":
         '''
         sparql_query.make_query_to_csv(query,'SPARQL2_subtask')
 
+    # This query returns the number of restaurants in all the cities except the ones in the
+    # state of Washington
     def task3():
         query = '''
         SELECT ?cityName (COUNT(?restaurant) AS ?num_restaurants)
@@ -76,6 +81,8 @@ if __name__ == "__main__":
         '''
         sparql_query.make_query_to_csv(query,'SPARQL3_subtask')
 
+    # This query returns the cities with a number of restaurants higher than 7 AND
+    # an average item price of more than 10
     def task4():
         query = '''
         SELECT ?cityName (COUNT(?restaurant) AS ?num_restaurants) (AVG(?menu_item_price) AS ?avg_value)
@@ -94,6 +101,8 @@ if __name__ == "__main__":
         '''
         sparql_query.make_query_to_csv(query,'SPARQL4_subtask')
 
+    # This query returns the names of the restaurants that are either in New York City
+    # or dont have any items on the menu worth higher than 5 USD
     def task5():
         query = '''
         SELECT ?name ?cityName ?menu_item_price
@@ -126,18 +135,4 @@ if __name__ == "__main__":
         '''
         sparql_query.make_query_to_csv(query,'SPARQL5_subtask')
 
-    def print_predicates():
-        predicates = set(sparql_query.graph.predicates())
-
-        prefixes = sparql_query.graph.namespace_manager.namespaces()
-
-        # Print the predicates
-        for predicate in predicates:
-            print(predicate)
-
-        # Print the prefixes
-        # for prefix, namespace in prefixes:
-        #     print(f"Prefix: {prefix}, Namespace: {namespace}")
-
-    #print_predicates()
     task5()
