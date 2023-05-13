@@ -1,209 +1,160 @@
-http://www.co-ode.org/ontologies/pizza/pizza.owl#American preferred_label American
-http://www.co-ode.org/ontologies/pizza/pizza.owl#AmericanHot preferred_label AmericanHot
-http://www.co-ode.org/ontologies/pizza/pizza.owl#AmericanHot preferred_label American Hot
-http://www.co-ode.org/ontologies/pizza/pizza.owl#AnchoviesTopping preferred_label AnchoviesTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#AnchoviesTopping preferred_label Anchovies
-http://www.co-ode.org/ontologies/pizza/pizza.owl#ArtichokeTopping preferred_label Artichoke
-http://www.co-ode.org/ontologies/pizza/pizza.owl#ArtichokeTopping preferred_label ArtichokeTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#AsparagusTopping preferred_label Asparagus
-http://www.co-ode.org/ontologies/pizza/pizza.owl#AsparagusTopping preferred_label AsparagusTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Cajun preferred_label Cajun
-http://www.co-ode.org/ontologies/pizza/pizza.owl#CajunSpiceTopping preferred_label Cajun Spice
-http://www.co-ode.org/ontologies/pizza/pizza.owl#CajunSpiceTopping preferred_label CajunSpiceTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#CaperTopping preferred_label Caper
-http://www.co-ode.org/ontologies/pizza/pizza.owl#CaperTopping preferred_label CaperTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Capricciosa preferred_label Capricciosa
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Caprina preferred_label Caprina
-http://www.co-ode.org/ontologies/pizza/pizza.owl#CheeseTopping preferred_label CheeseTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#CheeseTopping preferred_label Cheese
-http://www.co-ode.org/ontologies/pizza/pizza.owl#CheeseyPizza preferred_label CheesyPizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#CheeseyPizza preferred_label Cheesy Pizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#ChickenTopping preferred_label ChickenTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#ChickenTopping preferred_label Chicken
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Country preferred_label Country
-http://www.co-ode.org/ontologies/pizza/pizza.owl#DeepPanBase preferred_label DeepPanBase
-http://www.co-ode.org/ontologies/pizza/pizza.owl#DeepPanBase preferred_label Deep Pan Base
-http://www.co-ode.org/ontologies/pizza/pizza.owl#DomainConcept preferred_label DomainThing
-http://www.co-ode.org/ontologies/pizza/pizza.owl#DomainConcept preferred_label Domain Thing
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Fiorentina preferred_label Fiorentina
-http://www.co-ode.org/ontologies/pizza/pizza.owl#FishTopping preferred_label SeafoodTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#FishTopping preferred_label Seafood
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Food preferred_label Food
-http://www.co-ode.org/ontologies/pizza/pizza.owl#FourCheesesTopping preferred_label FourCheesesTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#FourCheesesTopping preferred_label Four Cheeses
-http://www.co-ode.org/ontologies/pizza/pizza.owl#FourSeasons preferred_label Four Seasons
-http://www.co-ode.org/ontologies/pizza/pizza.owl#FourSeasons preferred_label FourSeasons
-http://www.co-ode.org/ontologies/pizza/pizza.owl#FruitTopping preferred_label FruitTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#FruitTopping preferred_label Fruit
-http://www.co-ode.org/ontologies/pizza/pizza.owl#FruttiDiMare preferred_label FruttiDiMare
-http://www.co-ode.org/ontologies/pizza/pizza.owl#FruttiDiMare preferred_label Frutti Di Mare
-http://www.co-ode.org/ontologies/pizza/pizza.owl#GarlicTopping preferred_label Garlic
-http://www.co-ode.org/ontologies/pizza/pizza.owl#GarlicTopping preferred_label GarlicTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Giardiniera preferred_label Giardiniera
-http://www.co-ode.org/ontologies/pizza/pizza.owl#GoatsCheeseTopping preferred_label GoatsCheeseTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#GoatsCheeseTopping preferred_label Goats Cheese
-http://www.co-ode.org/ontologies/pizza/pizza.owl#GorgonzolaTopping preferred_label GorgonzolaTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#GorgonzolaTopping preferred_label Gorgonzola
-http://www.co-ode.org/ontologies/pizza/pizza.owl#GreenPepperTopping preferred_label Green Pepper
-http://www.co-ode.org/ontologies/pizza/pizza.owl#GreenPepperTopping preferred_label GreenPepperTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#HamTopping preferred_label HamTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#HamTopping preferred_label Ham
-http://www.co-ode.org/ontologies/pizza/pizza.owl#HerbSpiceTopping preferred_label HerbSpiceTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#HerbSpiceTopping preferred_label Herb Spice
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Hot preferred_label Hot
-http://www.co-ode.org/ontologies/pizza/pizza.owl#HotGreenPepperTopping preferred_label Hot Green Pepper
-http://www.co-ode.org/ontologies/pizza/pizza.owl#HotGreenPepperTopping preferred_label HotGreenPepperTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#HotSpicedBeefTopping preferred_label HotSpicedBeefTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#HotSpicedBeefTopping preferred_label Hot Spiced Beef
-http://www.co-ode.org/ontologies/pizza/pizza.owl#IceCream preferred_label IceCream
-http://www.co-ode.org/ontologies/pizza/pizza.owl#IceCream preferred_label Ice Cream
-http://www.co-ode.org/ontologies/pizza/pizza.owl#InterestingPizza preferred_label InterestingPizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#InterestingPizza preferred_label Interesting Pizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#JalapenoPepperTopping preferred_label Jalapeno Pepper
-http://www.co-ode.org/ontologies/pizza/pizza.owl#JalapenoPepperTopping preferred_label JalapenoPepperTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#LaReine preferred_label LaReine
-http://www.co-ode.org/ontologies/pizza/pizza.owl#LaReine preferred_label La Reine
-http://www.co-ode.org/ontologies/pizza/pizza.owl#LeekTopping preferred_label Leek
-http://www.co-ode.org/ontologies/pizza/pizza.owl#LeekTopping preferred_label LeekTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Margherita preferred_label Margherita
-http://www.co-ode.org/ontologies/pizza/pizza.owl#MeatTopping preferred_label MeatTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#MeatTopping preferred_label Meat
-http://www.co-ode.org/ontologies/pizza/pizza.owl#MeatyPizza preferred_label MeatyPizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#MeatyPizza preferred_label Meaty Pizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Medium preferred_label Medium
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Mild preferred_label Mild
-http://www.co-ode.org/ontologies/pizza/pizza.owl#MixedSeafoodTopping preferred_label MixedSeafoodTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#MixedSeafoodTopping preferred_label Mixed Seafood
-http://www.co-ode.org/ontologies/pizza/pizza.owl#MozzarellaTopping preferred_label MozzarellaTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#MozzarellaTopping preferred_label Mozzarella
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Mushroom preferred_label Mushroom
-http://www.co-ode.org/ontologies/pizza/pizza.owl#MushroomTopping preferred_label MushroomTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#MushroomTopping preferred_label Mushroom
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Napoletana preferred_label Napoletana
-http://www.co-ode.org/ontologies/pizza/pizza.owl#NonVegetarianPizza preferred_label Non Vegetarian Pizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#NonVegetarianPizza preferred_label NonVegetarianPizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#NutTopping preferred_label NutTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#NutTopping preferred_label Nut
-http://www.co-ode.org/ontologies/pizza/pizza.owl#OliveTopping preferred_label Olive
-http://www.co-ode.org/ontologies/pizza/pizza.owl#OliveTopping preferred_label OliveTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#OnionTopping preferred_label Onion
-http://www.co-ode.org/ontologies/pizza/pizza.owl#OnionTopping preferred_label OnionTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#ParmaHamTopping preferred_label Parma Ham
-http://www.co-ode.org/ontologies/pizza/pizza.owl#ParmaHamTopping preferred_label ParmaHamTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Parmense preferred_label Parmense
-http://www.co-ode.org/ontologies/pizza/pizza.owl#ParmesanTopping preferred_label ParmezanTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#ParmesanTopping preferred_label Parmezan
-http://www.co-ode.org/ontologies/pizza/pizza.owl#PeperonataTopping preferred_label PeperonataTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#PeperonataTopping preferred_label Peperonata
-http://www.co-ode.org/ontologies/pizza/pizza.owl#PeperoniSausageTopping preferred_label PeperoniSausageTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#PeperoniSausageTopping preferred_label Peperoni Sausage
-http://www.co-ode.org/ontologies/pizza/pizza.owl#PepperTopping preferred_label PepperTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#PepperTopping preferred_label Pepper
-http://www.co-ode.org/ontologies/pizza/pizza.owl#PetitPoisTopping preferred_label PetitPoisTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#PetitPoisTopping preferred_label Petit Pois
-http://www.co-ode.org/ontologies/pizza/pizza.owl#PineKernels preferred_label Pine Kernel
-http://www.co-ode.org/ontologies/pizza/pizza.owl#PineKernels preferred_label PineKernelTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza preferred_label Pizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#PizzaBase preferred_label PizzaBase
-http://www.co-ode.org/ontologies/pizza/pizza.owl#PizzaBase preferred_label Pizza Base
-http://www.co-ode.org/ontologies/pizza/pizza.owl#PizzaTopping preferred_label PizzaTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#PizzaTopping preferred_label Pizza Topping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#PolloAdAstra preferred_label Pollo Ad Astra
-http://www.co-ode.org/ontologies/pizza/pizza.owl#PolloAdAstra preferred_label PolloAdAstra
-http://www.co-ode.org/ontologies/pizza/pizza.owl#PrawnsTopping preferred_label PrawnsTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#PrawnsTopping preferred_label Prawns
-http://www.co-ode.org/ontologies/pizza/pizza.owl#PrinceCarlo preferred_label Prince Carlo
-http://www.co-ode.org/ontologies/pizza/pizza.owl#PrinceCarlo preferred_label PrinceCarlo
-http://www.co-ode.org/ontologies/pizza/pizza.owl#QuattroFormaggi preferred_label Quattro Formaggi
-http://www.co-ode.org/ontologies/pizza/pizza.owl#QuattroFormaggi preferred_label QuattroFormaggi
-http://www.co-ode.org/ontologies/pizza/pizza.owl#RealItalianPizza preferred_label Real Italian Pizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#RealItalianPizza preferred_label RealItalianPizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#RedOnionTopping preferred_label RedOnionTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#RedOnionTopping preferred_label Red Onion
-http://www.co-ode.org/ontologies/pizza/pizza.owl#RocketTopping preferred_label RocketTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#RocketTopping preferred_label Rocket
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Rosa preferred_label Rosa
-http://www.co-ode.org/ontologies/pizza/pizza.owl#RosemaryTopping preferred_label RosemaryTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#RosemaryTopping preferred_label Rosemary
-http://www.co-ode.org/ontologies/pizza/pizza.owl#SauceTopping preferred_label SauceTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#SauceTopping preferred_label Sauce
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Siciliana preferred_label Siciliana
-http://www.co-ode.org/ontologies/pizza/pizza.owl#SlicedTomatoTopping preferred_label Sliced Tomato
-http://www.co-ode.org/ontologies/pizza/pizza.owl#SlicedTomatoTopping preferred_label SlicedTomatoTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#SloppyGiuseppe preferred_label SloppyGiuseppe
-http://www.co-ode.org/ontologies/pizza/pizza.owl#SloppyGiuseppe preferred_label Sloppy Giuseppe
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Soho preferred_label Soho
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Spiciness preferred_label Spiciness
-http://www.co-ode.org/ontologies/pizza/pizza.owl#SpicyPizza preferred_label Spicy Pizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#SpicyPizza preferred_label SpicyPizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#SpicyPizzaEquivalent preferred_label SpicyPizzaEquivalent
-http://www.co-ode.org/ontologies/pizza/pizza.owl#SpicyPizzaEquivalent preferred_label Spicy Pizza Equivalent
-http://www.co-ode.org/ontologies/pizza/pizza.owl#SpicyTopping preferred_label Spicy
-http://www.co-ode.org/ontologies/pizza/pizza.owl#SpicyTopping preferred_label SpicyTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#SpinachTopping preferred_label Spinach
-http://www.co-ode.org/ontologies/pizza/pizza.owl#SpinachTopping preferred_label SpinachTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#SultanaTopping preferred_label Sultana
-http://www.co-ode.org/ontologies/pizza/pizza.owl#SultanaTopping preferred_label SultanaTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#SundriedTomatoTopping preferred_label Sundried Tomato
-http://www.co-ode.org/ontologies/pizza/pizza.owl#SundriedTomatoTopping preferred_label SundriedTomatoTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#SweetPepperTopping preferred_label Sweet Pepper
-http://www.co-ode.org/ontologies/pizza/pizza.owl#SweetPepperTopping preferred_label SweetPepperTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#ThinAndCrispyBase preferred_label ThinAndCrispyBase
-http://www.co-ode.org/ontologies/pizza/pizza.owl#ThinAndCrispyBase preferred_label Thin And Crispy Base
-http://www.co-ode.org/ontologies/pizza/pizza.owl#ThinAndCrispyPizza preferred_label Thin And Crispy Pizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#ThinAndCrispyPizza preferred_label ThinAndCrispyPizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#TobascoPepperSauce preferred_label Tobasco Pepper Sauce
-http://www.co-ode.org/ontologies/pizza/pizza.owl#TobascoPepperSauce preferred_label TobascoPepperSauceTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#TomatoTopping preferred_label Tomato
-http://www.co-ode.org/ontologies/pizza/pizza.owl#TomatoTopping preferred_label TomatoTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#UnclosedPizza preferred_label UnclosedPizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#UnclosedPizza preferred_label Unclosed Pizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#ValuePartition preferred_label Value Partition
-http://www.co-ode.org/ontologies/pizza/pizza.owl#ValuePartition preferred_label ValuePartition
-http://www.co-ode.org/ontologies/pizza/pizza.owl#VegetableTopping preferred_label Vegetable Topping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#VegetableTopping preferred_label VegetableTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#VegetarianPizza preferred_label Vegetarian Pizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#VegetarianPizza preferred_label VegetarianPizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#VegetarianPizzaEquivalent1 preferred_label Vegetarian Pizza1
-http://www.co-ode.org/ontologies/pizza/pizza.owl#VegetarianPizzaEquivalent1 preferred_label VegetarianPizza1
-http://www.co-ode.org/ontologies/pizza/pizza.owl#VegetarianPizzaEquivalent2 preferred_label Vegetarian Pizza2
-http://www.co-ode.org/ontologies/pizza/pizza.owl#VegetarianPizzaEquivalent2 preferred_label VegetarianPizza2
-http://www.co-ode.org/ontologies/pizza/pizza.owl#VegetarianTopping preferred_label Vegetarian Topping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#VegetarianTopping preferred_label VegetarianTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Veneziana preferred_label Veneziana
-http://www.co-ode.org/ontologies/pizza preferred_label pizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#CheeseyVegetableTopping preferred_label CheesyVegetableTopping
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Capricciosa Capricciosa Pizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Country A class that is equivalent to the set of individuals that are described in the enumeration - ie Countries can only be either America, England, France, Germany or Italy and nothing else. Note that these individuals have been asserted to be allDifferent from each other.
-http://www.co-ode.org/ontologies/pizza/pizza.owl#PrinceCarlo Prince Carlo Pizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Siciliana Siciliana Pizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#AmericanHot American Hot Pizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#CheeseyVegetableTopping This class will be unsatisfiable. This is because we have given it 2 disjoint parents, which means it could never have any instances (as nothing can be both a CheeseTopping and a VegetableTopping). NB Called ProbeInconsistentTopping in the ProtegeOWL Tutorial.
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Giardiniera Giardiniera Pizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Caprina Caprina Pizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#PolloAdAstra Pollo Ad Astra Pizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#LaReine La Reine Pizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#FruttiDiMare Frutti Di Mare Pizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#ValuePartition A ValuePartition is a pattern that describes a restricted set of classes from which a property can be associated. The parent class is used in restrictions, and the covering axiom means that only members of the subclasses may be used as values. The possible subclasses cannot be extended without updating the ValuePartition class.
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Parmense Parmese
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Parmense Parmese Pizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#FourSeasons Four Seasons Pizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#UnclosedPizza An unclosed Pizza cannot be inferred to be either a VegetarianPizza or a NonVegetarianPizza, because it might have other toppings.
-http://www.co-ode.org/ontologies/pizza/pizza.owl#QuattroFormaggi Quattro Formaggi Pizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#VegetarianPizzaEquivalent1 Any pizza that only has vegetarian toppings or no toppings is a VegetarianPizzaEquiv1. Should be inferred to be equivalent to VegetarianPizzaEquiv2. Not equivalent to VegetarianPizza because PizzaTopping is not covering
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Rosa Rosa Pizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Soho Soho Pizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Margherita Margherita Pizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Cajun Cajun Pizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Mushroom Mushroom Pizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Veneziana Veneziana Pizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Spiciness A ValuePartition that describes only values from Hot, Medium or Mild. NB Subclasses can themselves be divided up into further partitions.
-http://www.co-ode.org/ontologies/pizza/pizza.owl#IceCream A class to demonstrate mistakes made with setting a property domain. The property hasTopping has a domain of Pizza. This means that the reasoner can infer that all individuals using the hasTopping property must be of type Pizza. Because of the restriction on this class, all members of IceCream must use the hasTopping property, and therefore must also be members of Pizza. However, Pizza and IceCream are disjoint, so this causes an inconsistency. If they were not disjoint, IceCream would be inferred to be a subclass of Pizza.
-http://www.co-ode.org/ontologies/pizza/pizza.owl#SloppyGiuseppe Sloppy Giuseppe Pizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Fiorentina Fiorentina Pizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#Napoletana Napoletana Pizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#American American Pizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#SpicyPizzaEquivalent An alternative definition for the SpicyPizza which does away with needing a definition of SpicyTopping and uses a slightly more complicated restriction: Pizzas that have at least one topping that is both a PizzaTopping and has spiciness hot are members of this class.
-http://www.co-ode.org/ontologies/pizza/pizza.owl#VegetarianPizzaEquivalent2 An alternative to VegetarianPizzaEquiv1 that does not require a definition of VegetarianTopping. Perhaps more difficult to maintain. Not equivalent to VegetarianPizza
-http://www.co-ode.org/ontologies/pizza/pizza.owl#NamedPizza A pizza that can be found on a pizza menu
-http://www.co-ode.org/ontologies/pizza/pizza.owl#VegetarianTopping An example of a covering axiom. VegetarianTopping is equivalent to the union of all toppings in the given axiom. VegetarianToppings can only be Cheese or Vegetable or....etc.
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Pizzeria preferred_label Pizzeria
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#GreenPepper preferred_label Green pepper
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#MushroomPizza preferred_label Mushroom pizza
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Cheddar preferred_label Cheddar
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#BurgerPlace preferred_label Burger place
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Carrot preferred_label Carrot
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#PineapplePizza preferred_label Pineapple pizza
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#GreekPizza preferred_label Greek pizza
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#HawaiianPizza preferred_label Hawaiian pizza
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#MeatPizza preferred_label Meat pizza
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#CalifornianPizza preferred_label Californian pizza
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#State preferred_label State
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#ItalianRestaurant preferred_label Italian restaurant
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#SeafoodPizza preferred_label Seafood pizza
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#GreekRestaurant preferred_label Greek restaurant
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Restaurant preferred_label Restaurant
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#BarsPubsClubs preferred_label Bars, pubs and clubs
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Broccoli preferred_label Broccoli
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#SweetPotato preferred_label Sweet potato
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Address preferred_label Address
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#GreenOlives preferred_label Green olives
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Ingredient preferred_label Ingredient
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#VeganCheese preferred_label Vegan cheese
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#OliveOil preferred_label Olive oil
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#MenuItem preferred_label Menu item
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Zucchini preferred_label Zucchini
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#VeganPizza preferred_label Vegan pizza
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Country preferred_label Country
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Eggplant preferred_label Eggplant
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#RedPepper preferred_label Red pepper
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Pub preferred_label Pub
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Sauce preferred_label Sauce
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#PizzaBianca preferred_label Pizza bianca
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#CocktailBars preferred_label Cocktail bars
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Ricotta preferred_label Ricotta
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#CoffeeShop preferred_label Coffee shop
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Potato preferred_label Potato
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#SweetPizza preferred_label Sweet pizza
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#DietaryRestaurant preferred_label Dietary restaurant
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#MargheritaPizza preferred_label Margherita pizza
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Gorgonzola preferred_label Gorgonzola
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Gastropub preferred_label Gastro pub
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Marinara preferred_label Marinara
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Olives preferred_label Olives
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#SeafoodRestaurant preferred_label Seafood restaurant
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Parmesan preferred_label Parmesan
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Bacon preferred_label Bacon
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Shrimp preferred_label Shrimp
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#JalapenoPepper preferred_label Jalapeno pepper
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#SpanishRestaurant preferred_label Spanish restaurant
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#ItemValue preferred_label Item value
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Chicken preferred_label Chicken
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Artichokes preferred_label Artichoke
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#BeansPizza preferred_label Beans pizza
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#SeaFood preferred_label Seafood
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#AmericanRestaurant preferred_label American restaurant
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Beef preferred_label Beef
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Ham preferred_label Ham
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Mortadella preferred_label Mortadella
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#BlackOlives preferred_label Black olives
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Meatballs preferred_label Meatballs
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Prosciutto preferred_label Prosciutto
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Tomato preferred_label Tomato
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#BarbecueSauce preferred_label Barbecue sause
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#FruitPizza preferred_label Fruit pizza
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#VeganRestaurant preferred_label Vegan restaurant
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#BarbecuePizza preferred_label Barbecue pizza
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Club preferred_label Club
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Rosemary preferred_label Rosemary
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Pumpkin preferred_label Pumpkin
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Garlic preferred_label Garlic
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Bakery preferred_label Bakery
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#PizzaNutella preferred_label Pizza Nutella
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#BlueCheese preferred_label Blue cheese
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Location preferred_label Location
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#PizzaMarinara preferred_label Pizza marinara
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#PizzaRomana preferred_label Pizza Romana
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Salami preferred_label Salami
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#GlutenFreeRestaurant preferred_label Gluten-free restaurant
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#PizzaSupreme preferred_label Pizza supreme
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#MexicanPizza preferred_label Mexican pizza
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#ButternutSquash preferred_label ButternutSquash
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#JapanesePizza preferred_label Japanese pizza
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Onion preferred_label Onion
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Sausage preferred_label Sausage
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Pineapple preferred_label Pineapple
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#AsianRestaurant preferred_label Asian restaurant
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Oregano preferred_label Oregano
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#SushiRestaurant preferred_label Sushi restaurant
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Fig preferred_label Fig
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Tuna preferred_label Tuna
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Herbs preferred_label Herbs
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Vegetable preferred_label Vegetable
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Seeds preferred_label Seeds
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#MexicanRestaurant preferred_label Mexican restaurant
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#TomatoSauce preferred_label Tomato sauce
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Pizza preferred_label Pizza
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#ChineseRestaurant preferred_label Chinese restaurant
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#KaraokeBar preferred_label Karaoke bar
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#FrenchRestaurant preferred_label French restaurant
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#VegetarianRestaurant preferred_label Vegetarian restaurant
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#BeerPlace preferred_label Beer place
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Mozzarella preferred_label Mozzarella
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Capers preferred_label Capers
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Chorizo preferred_label Chorizo
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Meat preferred_label Meat
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Pepperoni preferred_label Pepperoni
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#SportsBar preferred_label Sports bar
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#CrabMeat preferred_label Crab meat
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Feta preferred_label Feta
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#City preferred_label City
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Fruit preferred_label Fruit
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#PlumTomato preferred_label Plum tomato
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Food preferred_label Food
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Pesto preferred_label Pesto
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Pepper preferred_label Pepper
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#ChickenPizza preferred_label Chicken pizza
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Scallops preferred_label Scallop
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#RootVegetable preferred_label Root vegetable
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#IndianRestaurant preferred_label Indian restaurant
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#MediterraneanRestaurant preferred_label Mediterranean restaurant
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#CherryTomato preferred_label Cherry tomato
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Spinach preferred_label Spinach
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#JapaneseRestaurant preferred_label Japanese restaurant
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#GoatCheese preferred_label Goat cheese
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#FetaPizza preferred_label Feta pizza
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#WinterSquash preferred_label Winter squash
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Mushroom preferred_label Mushroom
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Beans preferred_label Beans
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#VegetarianPizza preferred_label Vegetarian pizza
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#HotSauce preferred_label Hot sauce
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Basil preferred_label Basil
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#GourmetRestaurants preferred_label Gourmet restaurants
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#VeganIngredient preferred_label Vegan ingredient
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#AmericanPizza preferred_label American pizza
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Currency preferred_label Currency
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#PizzaNapolitana preferred_label Pizza Napolitana
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#BarAndGrill preferred_label Bar and Grill
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Provolone preferred_label Provolone
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Salmon preferred_label Salmon
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Bar preferred_label Bar
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#YellowPepper preferred_label Yellow pepper
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Tofu preferred_label Tofu
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#MeatPizza Meaty pizza
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#PizzaBianca White pizza
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#PizzaBianca Pizza without tomato sauce
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#BarbecueSauce BBQ sauce
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Vegetable For simplicity, this ontology relies on the original meaning to refer to all edible plant matter, including the flowers, fruits, stems, leaves, roots, and seeds.
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#BeerPlace Beer tavern
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#VeganCheese Dairy-free cheese
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#PizzaByIngredient Organized pizzas by ingredient
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Fruit For simplicity, this ontology relies on the common language usage of "fruit" (i.e., sweet fruit).
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Eggplant Aubergine
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#MushroomPizza Funghi pizza
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#CoffeeShop Cafeteria
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#PizzaByStyle Organizes pizzas by their style
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Bacon Pancetta
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Pizzeria Pizza place
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#BarbecuePizza BBQ pizza
+http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Pepperoni Pepperoni sausage
