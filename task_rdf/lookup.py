@@ -7,7 +7,7 @@ import json
 import time
 from urllib import parse, request
 
-from obj.entity import KGEntity
+from task_rdf.entity import KGEntity
 
 
 class Lookup(object):

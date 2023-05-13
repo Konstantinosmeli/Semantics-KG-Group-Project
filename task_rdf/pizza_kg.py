@@ -11,8 +11,8 @@ from rdflib.namespace import RDF, XSD
 from rdflib.util import guess_format
 import owlrl
 
-import obj.lookup as lookup
-from obj.isub import isub
+import task_rdf.lookup as lookup
+from task_rdf.isub import isub
 
 # Default prefixes represent data from public knowledge graphs
 DEFAULT_PREFIXES = [
