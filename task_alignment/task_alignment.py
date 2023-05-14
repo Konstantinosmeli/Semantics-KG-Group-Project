@@ -53,7 +53,9 @@ def create_graph_with_reasoning():
     )
 
     # Turtle file is created of the combined graph
-    single_combined_graph.serialize("./task_alignment/alignment_results/combined_task.ttl", format="turtle")
+    single_combined_graph.serialize(
+        "../task_alignment/alignment_results/combined_task.ttl", format="turtle"
+    )
 
 
 def query_pizza(onto):
@@ -70,13 +72,12 @@ def query_pizza(onto):
     query = prepareQuery(query_string)
     results = onto.query(query)
 
+#    results.serialize(destination="./test.csv", format="csv")
 
-    results.serialize(destination="./test.csv",format='csv')
 
-
-pizza_loc = "./pizza_ontology/pizza.owl"
-cw_onto_loc = "./cw_onto/pizza-restaurants-ontology.owl"
-cw_data_loc = "./task_rdf/pizza_restaurant.ttl"
+pizza_loc = "../pizza_ontology/pizza.owl"
+cw_onto_loc = "../cw_onto/pizza-restaurants-ontology.owl"
+cw_data_loc = "../task_rdf/pizza_restaurant.ttl"
 
 pizza_graph = Graph()
 pizza_graph.parse(pizza_loc, format="xml")
@@ -87,12 +88,14 @@ cw_onto_graph.parse(cw_onto_loc, format="xml")
 cw_data_graph = Graph()
 cw_data_graph.parse(cw_data_loc, format="ttl")
 
-#query_pizza(pizza_graph)
+query_pizza(pizza_graph)
 
 alignment_graph = Graph()
 
 find_equivalences(cw_onto_graph, pizza_graph)
 
-alignment_graph.serialize("./task_alignment/alignment_results/equivalences.ttl", format="turtle")
+alignment_graph.serialize(
+    "../task_alignment/alignment_results/equivalences.ttl", format="turtle"
+)
 
 create_graph_with_reasoning()

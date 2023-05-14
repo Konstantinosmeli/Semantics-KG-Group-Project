@@ -8,17 +8,21 @@
 
 <http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Artichokes> ns1:equivalentClass <http://www.co-ode.org/ontologies/pizza/pizza.owl#ArtichokeTopping> .
 
-<http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Country> ns1:equivalentClass <http://www.co-ode.org/ontologies/pizza/pizza.owl#Country> .
-
 <http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Food> ns1:equivalentClass <http://www.co-ode.org/ontologies/pizza/pizza.owl#Food> .
+
+<http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Gorgonzola> ns1:equivalentClass <http://www.co-ode.org/ontologies/pizza/pizza.owl#GorgonzolaTopping> .
 
 <http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#MargheritaPizza> ns1:equivalentClass <http://www.co-ode.org/ontologies/pizza/pizza.owl#Margherita> .
 
-<http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#MeatPizza> ns1:equivalentClass <http://www.co-ode.org/ontologies/pizza/pizza.owl#MeatyPizza> .
-
 <http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Mozzarella> ns1:equivalentClass <http://www.co-ode.org/ontologies/pizza/pizza.owl#MozzarellaTopping> .
 
+<http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Mushroom> ns1:equivalentClass <http://www.co-ode.org/ontologies/pizza/pizza.owl#Mushroom> .
+
+<http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#MushroomPizza> ns1:equivalentClass <http://www.co-ode.org/ontologies/pizza/pizza.owl#Mushroom> .
+
 <http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Parmesan> ns1:equivalentClass <http://www.co-ode.org/ontologies/pizza/pizza.owl#Parmense> .
+
+<http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Pepperoni> ns1:equivalentClass <http://www.co-ode.org/ontologies/pizza/pizza.owl#PepperTopping> .
 
 <http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Pizza> ns1:equivalentClass <http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza> .
 
@@ -27,4 +31,6 @@
 <http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Rosemary> ns1:equivalentClass <http://www.co-ode.org/ontologies/pizza/pizza.owl#RosemaryTopping> .
 
 <http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#Vegetable> ns1:equivalentClass <http://www.co-ode.org/ontologies/pizza/pizza.owl#VegetableTopping> .
+
+<http://www.semanticweb.org/city/in3067-inm713/2023/restaurants#VegetarianPizza> ns1:equivalentClass <http://www.co-ode.org/ontologies/pizza/pizza.owl#VegetarianPizzaEquivalent2> .
 

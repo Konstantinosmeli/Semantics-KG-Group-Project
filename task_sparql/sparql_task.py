@@ -24,7 +24,7 @@ class SparqlQuery:
 
 
 if __name__ == "__main__":
-    filename = "./task_rdf/pizza_restaurant.ttl"
+    filename = "../task_rdf/pizza_restaurant.ttl"
 
     sparql_query = SparqlQuery(filename)
 
@@ -44,7 +44,7 @@ if __name__ == "__main__":
             FILTER (?stateName = "TX")
         }
         """
-        sparql_query.make_query_to_csv(query, "./task_sparql/sparql_result/SPARQL1_subtask")
+        sparql_query.make_query_to_csv(query, "../task_sparql/sparql_result/SPARQL1_subtask")
 
     # This query returns the average price of all items on the Burgers & Cupcakes menu
     def task2():
@@ -59,7 +59,7 @@ if __name__ == "__main__":
             FILTER (?restaurantName = "Burgers & Cupcakes")
         }
         """
-        sparql_query.make_query_to_csv(query, "./task_sparql/sparql_result/SPARQL2_subtask")
+        sparql_query.make_query_to_csv(query, "../task_sparql/sparql_result/SPARQL2_subtask")
 
     # This query returns the number of restaurants in all the cities except the ones in the
     # state of Washington
@@ -78,7 +78,7 @@ if __name__ == "__main__":
         GROUP BY ?cityName
         HAVING (COUNT(?restaurant))
         """
-        sparql_query.make_query_to_csv(query, "./task_sparql/sparql_result/SPARQL3_subtask")
+        sparql_query.make_query_to_csv(query, "../task_sparql/sparql_result/SPARQL3_subtask")
 
     # This query returns the cities with a number of restaurants higher than 7 AND
     # an average item price of more than 10
@@ -98,7 +98,7 @@ if __name__ == "__main__":
         HAVING (COUNT(?restaurant) > 7 && AVG(?menu_item_price) > 10)
         ORDER BY DESC(?num_restaurants) ?avg_value
         """
-        sparql_query.make_query_to_csv(query, "./task_sparql/sparql_result/SPARQL4_subtask")
+        sparql_query.make_query_to_csv(query, "../task_sparql/sparql_result/SPARQL4_subtask")
 
     # This query returns the names of the restaurants that are either in New York City
     # or don't have any items on the menu worth higher than 5 USD
@@ -132,6 +132,6 @@ if __name__ == "__main__":
             }
         }
         """
-        sparql_query.make_query_to_csv(query, "./task_sparql/sparql_result/SPARQL5_subtask")
+        sparql_query.make_query_to_csv(query, "../task_sparql/sparql_result/SPARQL5_subtask")
 
     task5()
